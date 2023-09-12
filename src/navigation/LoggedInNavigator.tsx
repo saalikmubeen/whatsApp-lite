@@ -7,6 +7,7 @@ import SettingsScreen from "../screens/Settings.screen";
 import { LoggedInStackParamList, LoggedInTabParamList } from "./types";
 import ChatSettingsScreen from "../screens/ChatSettings.screen";
 import ChatScreen from "../screens/Chat.Screen";
+import NewChatScreen from "../screens/NewChat.Screen";
 
 const Stack = createStackNavigator<LoggedInStackParamList>();
 
@@ -17,7 +18,7 @@ const TabNavigator = () => {
 		<Tab.Navigator
 			screenOptions={{
 				headerTitle: "",
-				headerShadowVisible: false
+				headerShadowVisible: false,
 			}}
 			initialRouteName="Settings"
 		>
@@ -48,35 +49,41 @@ const TabNavigator = () => {
 const LoggedInNavigator = () => {
 	return (
 		<Stack.Navigator initialRouteName="Home">
-			<Stack.Screen
-				name="Home"
-				component={TabNavigator}
-				options={{
-					headerShown: false,
-				}}
-			/>
-			<Stack.Screen
-				name="ChatSettings"
-				initialParams={{
-					userId: "1",
-				}}
-				component={ChatSettingsScreen}
-				options={{
-					headerTitle: "ChatSettings",
-					headerBackTitle: "Back",
-				}}
-			/>
-			<Stack.Screen
-				name="Chat"
-				initialParams={{
-					userId: "1",
-				}}
-				component={ChatScreen}
-				options={{
-					headerTitle: "Chat",
-					headerBackTitle: "Back",
-				}}
-			/>
+			<Stack.Group>
+				<Stack.Screen
+					name="Home"
+					component={TabNavigator}
+					options={{
+						headerShown: false,
+					}}
+				/>
+				<Stack.Screen
+					name="ChatSettings"
+					initialParams={{
+						userId: "1",
+					}}
+					component={ChatSettingsScreen}
+					options={{
+						headerTitle: "ChatSettings",
+						headerBackTitle: "Back",
+					}}
+				/>
+				<Stack.Screen
+					name="Chat"
+					initialParams={{
+						userId: "1",
+					}}
+					component={ChatScreen}
+					options={{
+						headerTitle: "Chat",
+						headerBackTitle: "Back",
+					}}
+				/>
+			</Stack.Group>
+
+			<Stack.Group screenOptions={{ presentation: "modal" }}>
+				<Stack.Screen name="NewChat" component={NewChatScreen} />
+			</Stack.Group>
 		</Stack.Navigator>
 	);
 };

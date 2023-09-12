@@ -4,8 +4,7 @@ import { useAppDispatch } from "../utils/store";
 import { authenticate, setDidTryAutoLogin } from "../utils/store/authSlice";
 import { getUserData } from "../utils/actions/authActions";
 import { ActivityIndicator, View } from "react-native";
-import commonStyles from "../constants/commonStyles";
-import { colors } from "../constants";
+import { colors, commonStyles } from "../constants";
 
 const StartUpScreen = () => {
 	const dispatch = useAppDispatch();
@@ -23,6 +22,8 @@ const StartUpScreen = () => {
 			const { token, userId, expiryDate: expiryDateString } = parsedData;
 
 			const expiryDate = new Date(expiryDateString);
+
+			// If the token is expired or there is no token or userId, then we don't want to auto-login
 			if (expiryDate <= new Date() || !token || !userId) {
 				dispatch(setDidTryAutoLogin());
 				return;

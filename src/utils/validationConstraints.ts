@@ -16,6 +16,7 @@ export const validateString: ValidateFn = (id, value) => {
 	}
 
 	const validationResult = validate({ [id]: value }, { [id]: constraints });
+	// { "username": ["Username can't be blank"] } || undefined
 
 	return validationResult && validationResult[id];
 };

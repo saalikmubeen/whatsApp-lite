@@ -1,15 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-export type UserData = {
-	userId: string;
-	email: string;
-	firstName: string;
-	lastName: string;
-	firstLast: string;
-	signUpDate: string;
-	about?: string;
-	profilePicture?: string;
-};
+// import type { PayloadAction } from "@reduxjs/toolkit";
+import { UserData } from "./types";
 
 type AuthSliceState = {
 	token: null | string;
@@ -17,13 +8,15 @@ type AuthSliceState = {
 	didTryAutoLogin: boolean;
 };
 
+const initialState: AuthSliceState = {
+	token: null,
+	userData: null,
+	didTryAutoLogin: false,
+};
+
 const authSlice = createSlice({
 	name: "auth",
-	initialState: {
-		token: null,
-		userData: null,
-		didTryAutoLogin: false,
-	} as AuthSliceState,
+	initialState,
 	reducers: {
 		authenticate: (state, action) => {
 			const { payload } = action;

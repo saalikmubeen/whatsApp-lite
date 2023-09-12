@@ -29,7 +29,6 @@ export function reducer(state: State, action: Action) {
 
 	let updatedFormIsValid = true;
 
-	console.log(updatedValidities);
 	for (const key in updatedValidities) {
 		if (updatedValidities[key] !== undefined) {
 			updatedFormIsValid = false;
