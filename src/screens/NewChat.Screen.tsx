@@ -9,14 +9,11 @@ import { colors, commonStyles } from "../constants";
 import { FontAwesome } from "@expo/vector-icons";
 import { searchUsers } from "../utils/actions/userActions";
 import UserItem from "../components/UserItem";
-import { useAppSelector } from "../utils/store";
-import { UserData } from "../utils/store/types";
+import { useAppDispatch, useAppSelector } from "../utils/store";
+import { Users } from "../utils/store/types";
+import { setStoredUsers } from "../utils/store/usersSlice";
 
-type Props = StackScreenProps<LoggedInStackParamList>;
-
-type Users = {
-	[K in UserData["userId"]]: UserData;
-};
+type Props = StackScreenProps<LoggedInStackParamList, "NewChat">;
 
 const NewChatScreen = (props: Props) => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +21,18 @@ const NewChatScreen = (props: Props) => {
 	const [noResultsFound, setNoResultsFound] = useState(false);
 	const [searchTerm, setSearchTerm] = useState("");
 
+	const dispatch = useAppDispatch();
+
 	const userId = useAppSelector((state) => state.auth.userData?.userId);
+	const isGroupChat = props.route.params.isGroupChat;
+
+	const handleUserPressed = (otherUserId: string) => {
+		if (isGroupChat) {
+		} else {
+			dispatch(setStoredUsers({ newUsers: { [otherUserId]: users[otherUserId] } }));
+			props.navigation.navigate("Chat", { selectedUserId: otherUserId });
+		}
+	};
 
 	useLayoutEffect(() => {
 		props.navigation.setOptions({
@@ -96,6 +104,7 @@ const NewChatScreen = (props: Props) => {
 								title={`${userData.firstName} ${userData.lastName}`}
 								subTitle={userData.about}
 								image={userData.profilePicture}
+								onPress={() => handleUserPressed(userId)}
 							/>
 						);
 					}}

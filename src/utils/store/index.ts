@@ -1,13 +1,18 @@
-import { Action, ThunkAction, configureStore  } from '@reduxjs/toolkit';
-import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
+import { Action, ThunkAction, configureStore } from "@reduxjs/toolkit";
+import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import authSlice from "./authSlice";
+import usersSlice from "./usersSlice";
+import chatsSlice from "./chatsSlice";
+import chatMessagesSlice from "./chatMessagesSlice";
 
 export const store = configureStore({
-    reducer: {
-        auth: authSlice
-    }
+	reducer: {
+		auth: authSlice,
+		storedUsers: usersSlice,
+		chats: chatsSlice,
+		messages: chatMessagesSlice,
+	},
 });
-
 
 // If using TypeScript:
 export type ApplicationState = ReturnType<typeof store.getState>;

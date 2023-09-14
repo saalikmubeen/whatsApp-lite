@@ -1,11 +1,11 @@
 export type LoggedInStackParamList = {
 	Home: undefined;
 	ChatSettings: { userId: string };
-	Chat: { userId: string };
-	NewChat: undefined;
+	Chat: { selectedUserId?: string; chatId?: string; selectedUserIds?: string[]; isGroupChat?: boolean };
+	NewChat: { isGroupChat: boolean };
 };
 
 export type LoggedInTabParamList = {
-	ChatList: undefined;
+	ChatList: { selectedUserId?: string };
 	Settings: { userId: string };
 };

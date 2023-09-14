@@ -7,4 +7,5 @@ export const colors = {
 	textColor: "#1c1e21",
 	primary: "#32d4ae",
 	red: "#e74c3c",
+	beige: "#FEF5C3",
 };
