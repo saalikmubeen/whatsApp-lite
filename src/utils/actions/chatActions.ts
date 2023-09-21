@@ -105,3 +105,11 @@ const sendMessage = async (data: SendMessageParams) => {
 export const sendTextMessage = async (data: Omit<SendMessageParams, "imageUrl">) => {
 	await sendMessage(data);
 };
+
+
+export const sendImage = async (data: Omit<SendMessageParams, "messageText">) => {
+	await sendMessage({
+		...data,
+		messageText: "Image",
+	});
+}

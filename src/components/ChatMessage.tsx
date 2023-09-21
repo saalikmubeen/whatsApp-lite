@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { StyleSheet, Text, TextStyle, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
+import { Image, StyleSheet, Text, TextStyle, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
 import { Feather, FontAwesome } from "@expo/vector-icons";
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 import * as Clipboard from "expo-clipboard";
@@ -117,7 +117,7 @@ const ChatMessage = (props: Props) => {
 						/>
 					)}
 
-					<Text style={textStyle}>{text}</Text>
+					{imageUrl ? <Image source={{ uri: imageUrl }} style={styles.image} /> : <Text style={textStyle}>{text}</Text>}
 
 					{props.type !== "reply" && (
 						<View style={styles.timeContainer}>
