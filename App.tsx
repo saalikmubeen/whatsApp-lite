@@ -1,6 +1,7 @@
 import "react-native-gesture-handler";
 import React, { useCallback, useEffect, useState } from "react";
 import { Provider } from "react-redux";
+import { MenuProvider } from "react-native-popup-menu";
 import * as SplashScreen from "expo-splash-screen";
 import { LogBox } from "react-native";
 import * as Font from "expo-font";
@@ -58,7 +59,9 @@ export default function App() {
 	return (
 		<Provider store={store}>
 			<SafeAreaProvider style={{ flex: 1 }} onLayout={onLayoutRootView}>
-				<AppNavigator />
+				<MenuProvider>
+					<AppNavigator />
+				</MenuProvider>
 			</SafeAreaProvider>
 		</Provider>
 	);

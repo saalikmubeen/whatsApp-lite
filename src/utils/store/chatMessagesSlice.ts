@@ -17,13 +17,14 @@ const messagesSlice = createSlice({
 	initialState: initialState,
 	reducers: {
 		setChatMessages: (state, action: PayloadAction<{ chatId: string; messagesData: Messages }>) => {
-			const existingMessages = { ...state.messagesData };
+			// const existingMessages = { ...state.messagesData };
+			const existingMessages = state.messagesData;
 
 			const { chatId, messagesData } = action.payload;
 
 			existingMessages[chatId] = messagesData;
 
-			state.messagesData = existingMessages;
+			// state.messagesData = existingMessages;
 		},
 	},
 });

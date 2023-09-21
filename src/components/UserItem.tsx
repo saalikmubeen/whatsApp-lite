@@ -3,16 +3,19 @@ import { GestureResponderEvent, StyleSheet, Text, TouchableWithoutFeedback, View
 import ProfileImage from "./ProfileImage";
 import { colors } from "../constants";
 import UserImage from "./UserImage";
+import { Ionicons } from "@expo/vector-icons";
 
 type Props = {
 	title: string;
 	subTitle?: string;
 	image?: string;
 	onPress?: ((event: GestureResponderEvent) => void) | undefined;
+	isChecked?: boolean;
+	type: "user" | "group";
 };
 
 const UserItem = (props: Props) => {
-	const { title, subTitle, image, onPress } = props;
+	const { title, subTitle, image, onPress, isChecked, type } = props;
 
 	return (
 		<TouchableWithoutFeedback onPress={onPress}>
@@ -28,6 +31,14 @@ const UserItem = (props: Props) => {
 						{subTitle}
 					</Text>
 				</View>
+
+				{
+                    type === "group" &&
+                    <View style={{ ...styles.iconContainer, ...isChecked && styles.checkedStyle }}>
+                        <Ionicons name="checkmark" size={18} color="white" />
+                    </View>
+                }
+
 			</View>
 		</TouchableWithoutFeedback>
 	);
@@ -44,6 +55,7 @@ const styles = StyleSheet.create({
 	},
 	textContainer: {
 		marginLeft: 14,
+		flex: 1
 	},
 	title: {
 		fontFamily: "medium",
@@ -55,6 +67,16 @@ const styles = StyleSheet.create({
 		color: colors.gray,
 		letterSpacing: 0.3,
 	},
+	iconContainer: {
+        borderWidth: 1,
+        borderRadius: 50,
+        borderColor: colors.lightGray,
+        backgroundColor: 'white'
+    },
+    checkedStyle: {
+        backgroundColor: colors.primary,
+        borderColor: 'transparent'
+    }
 });
 
 export default UserItem;
