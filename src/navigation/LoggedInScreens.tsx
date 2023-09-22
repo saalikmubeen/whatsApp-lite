@@ -8,6 +8,7 @@ import { LoggedInStackParamList, LoggedInTabParamList } from "./types";
 import ChatSettingsScreen from "../screens/ChatSettings.screen";
 import ChatScreen from "../screens/Chat.Screen";
 import NewChatScreen from "../screens/NewChat.Screen";
+import ContactScreen from "../screens/Contact.screen";
 
 const Stack = createStackNavigator<LoggedInStackParamList>();
 
@@ -61,9 +62,6 @@ export const StackNavigator = () => {
 				/>
 				<Stack.Screen
 					name="ChatSettings"
-					initialParams={{
-						userId: "1",
-					}}
 					component={ChatSettingsScreen}
 					options={{
 						headerTitle: "ChatSettings",
@@ -75,6 +73,14 @@ export const StackNavigator = () => {
 					component={ChatScreen}
 					options={{
 						headerTitle: "Chat",
+						headerBackTitle: "Back",
+					}}
+				/>
+				<Stack.Screen
+					name="Contact"
+					component={ContactScreen}
+					options={{
+						headerTitle: "Contact info",
 						headerBackTitle: "Back",
 					}}
 				/>

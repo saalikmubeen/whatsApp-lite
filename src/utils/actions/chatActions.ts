@@ -1,11 +1,13 @@
 import { child, get, getDatabase, push, ref, remove, set, update } from "firebase/database";
 import { getFirebaseApp } from "../firebase";
-import { Message } from "../store/types";
+import { Message, UserData } from "../store/types";
+import { ChatData as ChatDataType } from "../store/types";
 
 type ChatData = {
 	users: string[];
 	isGroupChat: boolean;
 	chatName?: string;
+	chatImage?: string;
 	// createdBy: string;
 	// updatedBy: string;
 	// createdAt: string;
@@ -49,16 +51,36 @@ export const createChat = async (loggedInUserId: string, chatData: ChatData) => 
 	}
 };
 
+type UpdateChatParams = {
+	chatId: string;
+	userId: string;
+	chatData: Partial<ChatData>;
+};
+
+export const updateChatData = async (data: UpdateChatParams) => {
+	const { chatId, userId, chatData } = data;
+	const app = getFirebaseApp();
+	const dbRef = ref(getDatabase(app));
+	const chatRef = child(dbRef, `chats/${chatId}`);
+
+	await update(chatRef, {
+		...chatData,
+		updatedAt: new Date().toISOString(),
+		updatedBy: userId,
+	});
+};
+
 type SendMessageParams = {
 	chatId: string;
 	senderId: string;
 	messageText: string;
 	imageUrl?: string;
 	replyTo?: string; // other message Id
+	type?: string;
 };
 
 const sendMessage = async (data: SendMessageParams) => {
-	const { chatId, senderId, messageText, imageUrl, replyTo } = data;
+	const { chatId, senderId, messageText, imageUrl, replyTo, type } = data;
 
 	const app = getFirebaseApp();
 	const dbRef = ref(getDatabase());
@@ -92,6 +114,10 @@ const sendMessage = async (data: SendMessageParams) => {
 		messageData.imageUrl = imageUrl;
 	}
 
+	if (type) {
+		messageData.type = type;
+	}
+
 	await push(messagesRef, messageData);
 
 	const chatRef = child(dbRef, `chats/${chatId}`);
@@ -106,10 +132,157 @@ export const sendTextMessage = async (data: Omit<SendMessageParams, "imageUrl">)
 	await sendMessage(data);
 };
 
-
 export const sendImage = async (data: Omit<SendMessageParams, "messageText">) => {
 	await sendMessage({
 		...data,
 		messageText: "Image",
 	});
-}
+};
+
+export const sendInfoMessage = async (data: Omit<SendMessageParams, "type" | "imageUrl" | "replyTo">) => {
+	await sendMessage({
+		...data,
+		type: "info",
+	});
+};
+
+export const addUserChat = async (data: { userId: string; chatId: string }) => {
+	const { userId, chatId } = data;
+	try {
+		const app = getFirebaseApp();
+		const dbRef = ref(getDatabase(app));
+		const chatRef = child(dbRef, `userChats/${userId}`);
+
+		await push(chatRef, chatId);
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+};
+
+type addUsersToChatParams = {
+	userLoggedInData: UserData;
+	usersToAddData: UserData[];
+	chatData: ChatDataType;
+};
+
+export const addUsersToChat = async (data: addUsersToChatParams) => {
+	const { userLoggedInData, usersToAddData, chatData } = data;
+
+	const existingUsers = Object.values(chatData.users);
+	const newUsers: string[] = [];
+
+	let userAddedName = "";
+
+	usersToAddData.forEach(async (userToAdd) => {
+		const userIdToAdd = userToAdd.userId;
+
+		if (existingUsers.includes(userIdToAdd)) return;
+
+		newUsers.push(userIdToAdd);
+
+		// add chatId to list of userChats for each user
+		await addUserChat({ userId: userIdToAdd, chatId: chatData.key });
+
+		userAddedName = `${userToAdd.firstName} ${userToAdd.lastName}`;
+	});
+
+	if (newUsers.length === 0) {
+		return;
+	}
+
+	// await updateChatData(chatData.key, userLoggedInData.userId, { users: existingUsers.concat(newUsers) });
+	await updateChatData({
+		chatId: chatData.key,
+		userId: userLoggedInData.userId,
+		chatData: {
+			users: existingUsers.concat(newUsers),
+		},
+	});
+
+	// send info message to chat
+	const moreUsersMessage = newUsers.length > 1 ? `and ${newUsers.length - 1} others ` : "";
+	const messageText = `${userLoggedInData.firstName} ${userLoggedInData.lastName} added ${userAddedName} ${moreUsersMessage}to the chat`;
+	await sendInfoMessage({
+		chatId: chatData.key,
+		senderId: userLoggedInData.userId,
+		messageText,
+	});
+};
+
+export const getUserChats = async (userId: string) => {
+	try {
+		const app = getFirebaseApp();
+		const dbRef = ref(getDatabase(app));
+		const userRef = child(dbRef, `userChats/${userId}`);
+
+		const snapshot = await get(userRef);
+		return snapshot.val();
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+export const deleteUserChat = async (data: { userId: string; key: string }) => {
+	const { userId, key } = data;
+	try {
+		const app = getFirebaseApp();
+		const dbRef = ref(getDatabase(app));
+		const chatRef = child(dbRef, `userChats/${userId}/${key}`);
+
+		await remove(chatRef);
+	} catch (error) {
+		console.log(error);
+		throw error;
+	}
+};
+
+type RemoveUserFromChatParams = {
+	userLoggedInData: UserData;
+	userToRemoveData: UserData;
+	chatData: ChatDataType;
+};
+
+export const removeUserFromChat = async (data: RemoveUserFromChatParams) => {
+	const { userLoggedInData, userToRemoveData, chatData } = data;
+
+	const userToRemoveId = userToRemoveData.userId;
+	const newUsers = chatData.users.filter((uid) => uid !== userToRemoveId);
+
+	// remove user from the user list of chat
+	await updateChatData({
+		chatId: chatData.key,
+		userId: userLoggedInData.userId,
+		chatData: {
+			users: newUsers,
+		},
+	});
+
+	// remove chatId from the list of chats that user is a part of
+	const userChats = await getUserChats(userToRemoveId);
+	console.log("userChats");
+	console.log(userChats);
+
+	for (const key in userChats) {
+		const currentChatId = userChats[key];
+
+		if (currentChatId === chatData.key) {
+			await deleteUserChat({
+				userId: userToRemoveId,
+				key,
+			});
+			break;
+		}
+	}
+
+	const messageText =
+		userLoggedInData.userId === userToRemoveData.userId
+			? `${userLoggedInData.firstName} left the chat`
+			: `${userLoggedInData.firstName} removed ${userToRemoveData.firstName} from the chat`;
+
+	await sendInfoMessage({
+		chatId: chatData.key,
+		senderId: userLoggedInData.userId,
+		messageText,
+	});
+};

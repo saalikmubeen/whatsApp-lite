@@ -51,3 +51,19 @@ export const validatePassword: ValidateFn = (id, value) => {
 
 	return validationResult && validationResult[id];
 };
+
+export const validateLength = (id: string, value: string, minLength: number, maxLength: number, allowEmpty: boolean) => {
+	const constraints = {
+		presence: { allowEmpty },
+	} as any;
+
+	if (!allowEmpty || value !== "") {
+		constraints.length = {};
+		constraints.length.minimum = minLength;
+		constraints.length.maximum = maxLength;
+	}
+
+	const validationResult = validate({ [id]: value }, { [id]: constraints });
+
+	return validationResult && validationResult[id];
+};

@@ -39,7 +39,7 @@ function formatAmPm(dateString: string) {
 
 type Props = {
 	text: string;
-	type: "myMessage" | "theirMessage" | "reply";
+	type: "myMessage" | "theirMessage" | "reply" | "info";
 	messageId: string;
 	// chatId: string;
 	// userId: string;
@@ -74,13 +74,11 @@ const ChatMessage = (props: Props) => {
 	const showMessageMenu = () => {
 		if (props.type === "reply") return;
 		menuRef.current?.props.ctx.menuActions.openMenu(messageId);
-	}
-
-	
+	};
 
 	switch (type) {
 		case "myMessage":
-			wrapperStyle.flexDirection = "row"
+			wrapperStyle.flexDirection = "row";
 			wrapperStyle.justifyContent = "flex-end";
 			messageStyle.backgroundColor = "#E7FED6";
 			messageStyle.maxWidth = "90%";
@@ -92,9 +90,13 @@ const ChatMessage = (props: Props) => {
 			break;
 		case "reply":
 			messageStyle.backgroundColor = "#F2F2F2";
-			wrapperStyle.borderLeftColor =  colors.blue
-		    wrapperStyle.borderLeftWidth = 4
+			wrapperStyle.borderLeftColor = colors.blue;
+			wrapperStyle.borderLeftWidth = 4;
 			break;
+		case "info":
+			messageStyle.backgroundColor = "white";
+			messageStyle.alignItems = "center";
+			textStyle.color = colors.textColor;
 		default:
 			break;
 	}
@@ -103,7 +105,7 @@ const ChatMessage = (props: Props) => {
 		<View style={wrapperStyle}>
 			<TouchableWithoutFeedback style={{ width: "100%" }} onLongPress={showMessageMenu} onPress={scrollToRepliedMessage}>
 				<View style={messageStyle}>
-					{name && <Text style={styles.name}>{name}</Text>}
+					{type !== "info" && name && <Text style={styles.name}>{name}</Text>}
 
 					{replyTo && replyToUser && (
 						<ChatMessage
@@ -141,8 +143,7 @@ const ChatMessage = (props: Props) => {
 };
 
 const styles = StyleSheet.create({
-	wrapperStyle: {
-	},
+	wrapperStyle: {},
 	container: {
 		backgroundColor: "white",
 		borderRadius: 6,

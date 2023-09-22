@@ -17,6 +17,7 @@ export type ChatData = {
 	users: string[];
 	isGroupChat: boolean;
 	chatName: ChatData["isGroupChat"] extends true ? string : undefined;
+	chatImage?: string;
 	createdBy: string;
 	updatedBy: string;
 	createdAt: string;
@@ -33,6 +34,7 @@ export type Message = {
 	sentAt: string;
 	imageUrl?: string;
 	replyTo?: string; // other message Id
+	type?: string;
 	// updatedAt: string;
 };
 

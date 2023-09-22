@@ -9,11 +9,13 @@ import { useAppDispatch } from "../utils/store";
 import { launchImagePicker, uploadImageAsync } from "../utils/imagePickerHelper";
 import { updateLoggedInUserData } from "../utils/store/authSlice";
 import { colors } from "../constants";
+import { updateChatData } from "../utils/actions/chatActions";
 
 type Props = {
 	uri: string | undefined;
 	userId: string;
 	size: number;
+	chatId?: string;
 };
 
 const ProfileImage = (props: Props) => {
@@ -25,6 +27,7 @@ const ProfileImage = (props: Props) => {
 	const [isLoading, setIsLoading] = useState(false);
 
 	const userId = props.userId;
+	const chatId = props.chatId;
 
 	const pickImage = async () => {
 		try {
@@ -41,10 +44,21 @@ const ProfileImage = (props: Props) => {
 				throw new Error("Could not upload image");
 			}
 
-			const newData = { profilePicture: uploadUrl };
+			// profile picture of group chat
+			console.log(chatId);
+			if (chatId) {
+				await updateChatData({
+					chatId,
+					userId,
+					chatData: { chatImage: uploadUrl },
+				});
+			} else {
+				// profile picture of user
+				const newData = { profilePicture: uploadUrl };
 
-			await updateSignedInUserData(userId, newData);
-			dispatch(updateLoggedInUserData({ newData }));
+				await updateSignedInUserData(userId, newData);
+				dispatch(updateLoggedInUserData({ newData }));
+			}
 
 			setImage({ uri: uploadUrl });
 		} catch (error) {

@@ -1,5 +1,17 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import { ActivityIndicator, FlatList, Image, ImageBackground, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+	ActivityIndicator,
+	FlatList,
+	Image,
+	ImageBackground,
+	KeyboardAvoidingView,
+	Platform,
+	StyleSheet,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	View,
+} from "react-native";
 import { Feather } from "@expo/vector-icons";
 import type { StackScreenProps } from "@react-navigation/stack";
 import { LoggedInStackParamList, LoggedInTabParamList } from "../navigation/types";
@@ -14,6 +26,8 @@ import Bubble from "../components/Bubble";
 import ReplyingTo from "../components/ReplyingTo";
 import { launchImagePicker, openCamera, uploadImageAsync } from "../utils/imagePickerHelper";
 import AwesomeAlert from "../components/alerts";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import CustomHeaderButton from "../components/CustomHeaderButton";
 
 // import BackgroundImage from "../../assets/images/droplet.jpeg";
 
@@ -128,7 +142,7 @@ const ChatScreen = (props: Props) => {
 	const scrollToMessage = (message: Message) => {
 		const index = chatMessages.findIndex((msg) => msg.messageId === message.messageId);
 		flatListRef.current?.scrollToIndex({ index, animated: true });
-	}
+	};
 
 	const pickImage = useCallback(async () => {
 		try {
@@ -151,7 +165,6 @@ const ChatScreen = (props: Props) => {
 			console.log(error);
 		}
 	}, [tempImageUri]);
-
 
 	const uploadImage = useCallback(async () => {
 		setIsLoading(true);
@@ -198,7 +211,6 @@ const ChatScreen = (props: Props) => {
 				setReplyingTo(null);
 				setTimeout(() => setTempImageUri(null), 500);
 			}
-
 		} catch (error) {
 			console.log(error);
 		}
@@ -207,10 +219,32 @@ const ChatScreen = (props: Props) => {
 	useEffect(() => {
 		props.navigation.setOptions({
 			headerTitle: getChatTitle(),
+			headerRight: () => {
+				let chatUsers: string[] = [];
+				if (currentChatId) {
+					const chatData = storedChats[currentChatId];
+					chatUsers = chatData.users;
+				}
+				return (
+					<HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+						{currentChatId && (
+							<Item
+								title="Chat settings"
+								iconName="settings-outline"
+								onPress={() =>
+									chatData.isGroupChat
+										? props.navigation.navigate("ChatSettings", { chatId: currentChatId })
+										: props.navigation.navigate("Contact", { userId: chatUsers.find((uid) => uid !== userData.userId)! })
+								}
+							/>
+						)}
+					</HeaderButtons>
+				);
+			},
 		});
-	}, []);
+	}, [currentChatId]);
 
-	console.log(tempImageUri)
+	console.log(tempImageUri);
 
 	return (
 		<SafeAreaView style={styles.container} edges={["bottom", "left", "right"]}>
@@ -231,7 +265,16 @@ const ChatScreen = (props: Props) => {
 										const message = itemData.item;
 
 										const isOwnMessage = message.sentBy === userData.userId;
-										const messageType = isOwnMessage ? "myMessage" : "theirMessage";
+										// const messageType = isOwnMessage ? "myMessage" : "theirMessage";
+
+										let messageType = "info";
+										if (message.type && message.type === "info") {
+											messageType = "info";
+										} else if (isOwnMessage) {
+											messageType = "myMessage";
+										} else {
+											messageType = "theirMessage";
+										}
 
 										const sender = message.sentBy && storedUsers[message.sentBy];
 										const senderName = sender && `${sender.firstName} ${sender.lastName}`;

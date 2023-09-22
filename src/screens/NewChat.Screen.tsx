@@ -10,34 +10,40 @@ import { FontAwesome } from "@expo/vector-icons";
 import { searchUsers } from "../utils/actions/userActions";
 import UserItem from "../components/UserItem";
 import { useAppDispatch, useAppSelector } from "../utils/store";
-import { Users } from "../utils/store/types";
+import { UserData, Users } from "../utils/store/types";
 import { setStoredUsers } from "../utils/store/usersSlice";
 import UserImage from "../components/UserImage";
+import { addUsersToChat } from "../utils/actions/chatActions";
 
 type Props = StackScreenProps<LoggedInStackParamList, "NewChat">;
 
 const NewChatScreen = (props: Props) => {
+	const chatId = props.route.params.chatId;
+	const existingUsersInChat = props.route.params.existingUsers;
+	const isNewGroupChat = !chatId;
+
 	const [isLoading, setIsLoading] = useState(false);
+	const [addingUsers, setAddingUsers] = useState(false); // for already existing group chat
 	const [users, setUsers] = useState<Users>({});
 	const [noResultsFound, setNoResultsFound] = useState(false);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedUserIds, setSelectedUserIds] = useState<Array<keyof Users>>([]); // array of user ids for group chat
 	const [chatName, setChatName] = useState("");
 
-	 const selectedUsersFlatList = useRef<FlatList<string>>();
+	const selectedUsersFlatList = useRef<FlatList<string>>();
 
 	const dispatch = useAppDispatch();
 
-	const userId = useAppSelector((state) => state.auth.userData?.userId);
+	const userData = useAppSelector((state) => state.auth.userData)!; // current logged in user
 	const storedUsers = useAppSelector((state) => state.storedUsers.storedUsers);
 	const userChats = useAppSelector((state) => {
 		const chatsData = state.chats.chatsData;
-		return Object.values(chatsData)
+		return Object.values(chatsData);
 	});
 
 	const isGroupChat = props.route.params.isGroupChat;
 
-	const isGroupChatDisabled = selectedUserIds.length === 0 || chatName === "";
+	const isGroupChatDisabled = selectedUserIds.length === 0 || (chatName === "" && isNewGroupChat);
 
 	const handleUserPressed = (otherUserId: string) => {
 		if (isGroupChat) {
@@ -51,17 +57,56 @@ const NewChatScreen = (props: Props) => {
 			dispatch(setStoredUsers({ newUsers: { [otherUserId]: users[otherUserId] } }));
 		} else {
 			// chat with this user already exists
-			let chatData = userChats.find(chat => !chat.isGroupChat && chat.users.includes(otherUserId))
-	
+			let chatData = userChats.find((chat) => !chat.isGroupChat && chat.users.includes(otherUserId));
+
 			if (chatData) {
-				props.navigation.navigate("Chat", { chatId: chatData.chatId, isGroupChat: false  })
+				props.navigation.navigate("Chat", { chatId: chatData.chatId, isGroupChat: false });
 			} else {
 				// it's a new chat with this user
 				dispatch(setStoredUsers({ newUsers: { [otherUserId]: users[otherUserId] } }));
-			    props.navigation.navigate("Chat", { selectedUserId: otherUserId, isGroupChat: false });
+				props.navigation.navigate("Chat", { selectedUserId: otherUserId, isGroupChat: false });
 			}
 		}
 	};
+
+	const addUsersToGroupChat = async () => {
+		if (!chatId) return;
+
+		const chatData = userChats.find((chat) => chat.chatId === chatId);
+		if (!chatData) return;
+
+		if (!selectedUserIds || selectedUserIds.length === 0) {
+			return;
+		}
+
+		const selectedUsersData: UserData[] = [];
+		selectedUserIds.forEach((uid) => {
+			if (uid === userData.userId) return;
+			if (!storedUsers[uid]) {
+				console.log("No user data found in the data store");
+				return;
+			}
+			selectedUsersData.push(storedUsers[uid]);
+		});
+
+		try {
+			setAddingUsers(true);
+			await addUsersToChat({
+				userLoggedInData: userData,
+				usersToAddData: selectedUsersData,
+				chatData: chatData,
+			});
+		} catch (error) {
+			console.log(error);
+			setAddingUsers(false);
+		}
+
+		// props.navigation.navigate("ChatSettings", {
+		// 	chatId,
+		// });
+		props.navigation.goBack();
+	};
+	console.log(selectedUserIds);
 
 	useEffect(() => {
 		props.navigation.setOptions({
@@ -77,15 +122,20 @@ const NewChatScreen = (props: Props) => {
 					<HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
 						{isGroupChat && (
 							<Item
-								title="Create"
+								title={isNewGroupChat ? "Create" : addingUsers ? <ActivityIndicator /> : "Add"}
+								// title={<ActivityIndicator />}
 								disabled={isGroupChatDisabled}
 								color={isGroupChatDisabled ? colors.lightGray : undefined}
 								onPress={() => {
-									props.navigation.navigate("Chat", {
-										selectedUserIds,
-										chatName,
-										isGroupChat: true,
-									});
+									if (isNewGroupChat) {
+										props.navigation.navigate("Chat", {
+											selectedUserIds,
+											chatName,
+											isGroupChat: true,
+										});
+									} else {
+										addUsersToGroupChat();
+									}
 								}}
 							/>
 						)}
@@ -94,7 +144,7 @@ const NewChatScreen = (props: Props) => {
 			},
 			headerTitle: isGroupChat ? "Add participants" : "New chat",
 		});
-	}, [chatName, selectedUserIds]);
+	}, [chatName, selectedUserIds, isGroupChatDisabled, isGroupChat, isNewGroupChat, addingUsers]);
 
 	useEffect(() => {
 		const delaySearch = setTimeout(async () => {
@@ -110,9 +160,17 @@ const NewChatScreen = (props: Props) => {
 			const usersResult = await searchUsers(searchTerm);
 
 			// Remove the current logged in user from the search list
-			if (userId) {
-				delete usersResult[userId];
+			if (userData.userId) {
+				delete usersResult[userData.userId];
 			}
+
+			// Remove users that are already in the chat
+			if (existingUsersInChat) {
+				existingUsersInChat.forEach((uid) => {
+					delete usersResult[uid];
+				});
+			}
+
 			setUsers(usersResult);
 
 			if (Object.keys(usersResult).length === 0) {
@@ -127,9 +185,11 @@ const NewChatScreen = (props: Props) => {
 		return () => clearTimeout(delaySearch);
 	}, [searchTerm]);
 
+	console.log(selectedUserIds);
+
 	return (
 		<PageContainer>
-			{isGroupChat && (
+			{isGroupChat && isNewGroupChat && (
 				<>
 					<View style={styles.chatNameContainer}>
 						<View style={styles.inputContainer}>
@@ -151,7 +211,7 @@ const NewChatScreen = (props: Props) => {
 								horizontal={true}
 								keyExtractor={(item) => item}
 								contentContainerStyle={{ alignItems: "center" }}
-								ref={ref => selectedUsersFlatList.current = ref!}
+								ref={(ref) => (selectedUsersFlatList.current = ref!)}
 								onContentSizeChange={() => selectedUsersFlatList.current?.scrollToEnd()}
 								renderItem={(itemData) => {
 									const userId = itemData.item;

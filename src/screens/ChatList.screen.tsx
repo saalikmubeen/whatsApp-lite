@@ -65,6 +65,7 @@ const ChatListScreen = (props: Props) => {
 
 					if (isGroupChat) {
 						title = chatData.chatName!;
+						image = chatData.chatImage;
 					} else {
 						const otherUserId = chatData.users.find((uid) => uid !== userData.userId);
 						if (otherUserId) {
@@ -77,7 +78,15 @@ const ChatListScreen = (props: Props) => {
 						}
 					}
 
-					return <UserItem title={title} subTitle={subTitle} image={image} onPress={() => props.navigation.navigate("Chat", { chatId })} />;
+					return (
+						<UserItem
+							title={title}
+							subTitle={subTitle}
+							image={image}
+							onPress={() => props.navigation.navigate("Chat", { chatId })}
+							type="user"
+						/>
+					);
 				}}
 			/>
 		</PageContainer>

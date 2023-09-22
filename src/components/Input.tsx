@@ -9,8 +9,8 @@ import { colors } from "../constants";
 type Props = TextInputProps & {
 	id: string;
 	label: string;
-	icon: any;
-	iconPack: any;
+	icon?: any;
+	iconPack?: any;
 	iconSize?: number;
 	errorText: string[] | undefined;
 	onInputChanged: (inputId: string, inputValue: string) => void;
