@@ -106,7 +106,6 @@ const NewChatScreen = (props: Props) => {
 		// });
 		props.navigation.goBack();
 	};
-	console.log(selectedUserIds);
 
 	useEffect(() => {
 		props.navigation.setOptions({
@@ -184,8 +183,6 @@ const NewChatScreen = (props: Props) => {
 
 		return () => clearTimeout(delaySearch);
 	}, [searchTerm]);
-
-	console.log(selectedUserIds);
 
 	return (
 		<PageContainer>

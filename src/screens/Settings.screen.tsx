@@ -17,7 +17,7 @@ import ProfileImage from "../components/ProfileImage";
 const SettingsScreen = () => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
-	const userData = useAppSelector((state) => state.auth.userData);
+	const userData = useAppSelector((state) => state.auth.userData)!;
 
 	const firstName = userData?.firstName || "";
 	const lastName = userData?.lastName || "";
@@ -144,7 +144,7 @@ const SettingsScreen = () => {
 					)}
 				</View>
 
-				<SubmitButton title="Logout" onPress={() => dispatch(userLogout())} style={styles.button} color={colors.red} />
+				<SubmitButton title="Logout" onPress={() => dispatch(userLogout(userData.userId))} style={styles.button} color={colors.red} />
 			</ScrollView>
 		</PageContainer>
 	);

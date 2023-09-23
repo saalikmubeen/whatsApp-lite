@@ -94,9 +94,11 @@ const ChatMessage = (props: Props) => {
 			wrapperStyle.borderLeftWidth = 4;
 			break;
 		case "info":
-			messageStyle.backgroundColor = "white";
+			wrapperStyle.alignItems = "center";
 			messageStyle.alignItems = "center";
+			messageStyle.backgroundColor = colors.beige;
 			textStyle.color = colors.textColor;
+			break;
 		default:
 			break;
 	}

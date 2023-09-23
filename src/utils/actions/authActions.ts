@@ -1,9 +1,13 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { child, getDatabase, ref, set, get, update } from "firebase/database";
+import { child, getDatabase, ref, set, get, update, push } from "firebase/database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
 import { getFirebaseApp } from "../firebase";
 import { authenticate, logout } from "../store/authSlice";
 import { ApplicationDispatch } from "../store";
+import { UserData } from "../store/types";
 
 type SignUpParams = {
 	email: string;
@@ -52,8 +56,11 @@ export const signUp = (credentials: SignUpParams) => {
 				expiryDate,
 			});
 
+			// store user's push token in firebase
+			await storePushToken(userData);
+
 			timer = setTimeout(() => {
-				dispatch(userLogout());
+				dispatch(userLogout(userId));
 			}, millisecondsUntilExpiry);
 
 			dispatch(authenticate({ token: accessToken, userData }));
@@ -95,8 +102,11 @@ export const signIn = (credentials: SignInParams) => {
 				expiryDate,
 			});
 
+			// store user's push token in firebase
+			await storePushToken(userData);
+
 			timer = setTimeout(() => {
-				dispatch(userLogout());
+				dispatch(userLogout(uid));
 			}, millisecondsUntilExpiry);
 
 			dispatch(authenticate({ token: accessToken, userData }));
@@ -159,8 +169,15 @@ const createUser = async (data: CreateUserParams) => {
 	return userData;
 };
 
-export const userLogout = () => {
+export const userLogout = (userId: string) => {
 	return async (dispatch: ApplicationDispatch) => {
+		// on logout, remove user's push token from firebase so they don't receive notifications when they are looged out of the app
+		try {
+			await removePushToken(userId);
+		} catch (error) {
+			console.log(error);
+		}
+
 		AsyncStorage.clear();
 		if (timer) {
 			clearTimeout(timer);
@@ -198,4 +215,87 @@ export const getUserData = async (userId: string) => {
 	} catch (error) {
 		console.log(error);
 	}
+};
+
+// PUSH NOTIFICATIONS and TOKENS
+
+const storePushToken = async (userData: any) => {
+	if (!Device.isDevice) {
+		return;
+	}
+
+	const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+	const token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+
+	const userTokensData = userData.pushTokens ? { ...userData.pushTokens } : {};
+	const userTokensArray = Object.values(userTokensData);
+
+	console.log("userTokens");
+	console.log(userTokensData);
+
+	// if user already has this device's token stored, don't store it again
+	if (userTokensArray.includes(token)) {
+		return;
+	}
+
+	// userTokensArray.push(token);
+
+	// for (let i = 0; i < userTokensArray.length; i++) {
+	// 	const token = userTokensArray[i];
+	// 	userTokensData[i] = token;
+	// }
+
+	// const app = getFirebaseApp();
+	// const dbRef = ref(getDatabase(app));
+	// const userRef = child(dbRef, `users/${userData.userId}/pushTokens`);
+
+	// await set(userRef, userTokensData);
+
+	const app = getFirebaseApp();
+	const dbRef = ref(getDatabase(app));
+	const userRef = child(dbRef, `users/${userData.userId}/pushTokens`);
+
+	await push(userRef, token);
+};
+
+export const getUserPushTokens = async (userId: string) => {
+	try {
+		const app = getFirebaseApp();
+		const dbRef = ref(getDatabase(app));
+		const userRef = child(dbRef, `users/${userId}/pushTokens`);
+
+		const snapshot = await get(userRef);
+
+		if (!snapshot || !snapshot.exists()) {
+			return {};
+		}
+
+		return snapshot.val() || {};
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+const removePushToken = async (userId: string) => {
+	if (!Device.isDevice) {
+		return;
+	}
+
+	const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+	const token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+
+	const usersTokenData = await getUserPushTokens(userId);
+
+	for (const key in usersTokenData) {
+		if (usersTokenData[key] === token) {
+			delete usersTokenData[key];
+			break;
+		}
+	}
+
+	const app = getFirebaseApp();
+	const dbRef = ref(getDatabase(app));
+	const userRef = child(dbRef, `users/${userId}/pushTokens`);
+
+	await set(userRef, usersTokenData);
 };

@@ -15,7 +15,6 @@ const userSlice = createSlice({
 	initialState: initialState,
 	reducers: {
 		setStoredUsers: (state, action: PayloadAction<{ newUsers: Users }>) => {
-			console.log(action.payload);
 			const payload = action.payload.newUsers;
 			const newUsers = { ...payload };
 			// const existingUsers = { ...state.storedUsers };

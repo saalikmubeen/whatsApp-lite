@@ -45,7 +45,6 @@ const ProfileImage = (props: Props) => {
 			}
 
 			// profile picture of group chat
-			console.log(chatId);
 			if (chatId) {
 				await updateChatData({
 					chatId,

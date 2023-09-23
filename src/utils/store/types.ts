@@ -7,6 +7,9 @@ export type UserData = {
 	signUpDate: string;
 	about?: string;
 	profilePicture?: string;
+	pushTokens?: {
+		[id: string]: string;
+	};
 };
 
 export type Users = {

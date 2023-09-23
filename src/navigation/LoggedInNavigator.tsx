@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import * as Notifications from "expo-notifications";
+import { StackActions, useNavigation } from "@react-navigation/native";
 import { child, get, getDatabase, off, onValue, ref } from "firebase/database";
 import { StackNavigator } from "./LoggedInScreens";
 import { useAppDispatch, useAppSelector } from "../utils/store";
@@ -9,15 +11,60 @@ import { setChatsData } from "../utils/store/chatsSlice";
 import { setChatMessages } from "../utils/store/chatMessagesSlice";
 import { ActivityIndicator, View } from "react-native";
 import { colors, commonStyles } from "../constants";
+import { registerForPushNotificationsAsync } from "../utils/notifications";
 
 const LoggedInNavigator = () => {
+	const [expoPushToken, setExpoPushToken] = useState("");
+	console.log("expoPushToken", expoPushToken);
+	console.log(expoPushToken);
 	const [isLoading, setIsLoading] = useState(true);
 	const userData = useAppSelector((state) => state.auth.userData)!;
 	const storedUsers = useAppSelector((state) => state.storedUsers.storedUsers);
 
-	console.log(storedUsers);
-
 	const dispatch = useAppDispatch();
+
+	const notificationListener = useRef<Notifications.Subscription>();
+	const responseListener = useRef<Notifications.Subscription>();
+
+	const navigation = useNavigation();
+
+	useEffect(() => {
+		registerForPushNotificationsAsync().then((token) => {
+			if (token) {
+				setExpoPushToken(token);
+			}
+		});
+
+		// What to do when the app is in the background, the user receives a notification
+		notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+			// Handle received notification
+		});
+
+		// What do do when the app is in the background, the user presses the notification
+		responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+			const { data } = response.notification.request.content;
+			const chatId = data["chatId"];
+
+			if (chatId) {
+				// Navigate the user to that chat screen
+				// const pushAction = StackActions.push("Chat", { chatId });
+				// navigation.dispatch(pushAction);
+				// OR
+				navigation.navigate("Chat", { chatId });
+			} else {
+				console.log("No chat id sent with notification");
+			}
+		});
+
+		return () => {
+			if (notificationListener.current) {
+				Notifications.removeNotificationSubscription(notificationListener.current);
+			}
+			if (responseListener.current) {
+				Notifications.removeNotificationSubscription(responseListener.current);
+			}
+		};
+	}, []);
 
 	useEffect(() => {
 		console.log("Subscribing to firebase listeners");

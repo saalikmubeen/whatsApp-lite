@@ -98,6 +98,7 @@ const ChatScreen = (props: Props) => {
 	const sendMessage = useCallback(async () => {
 		try {
 			let id = currentChatId;
+			let usersInChat: string[] = [];
 
 			// means it's a new chat
 			if (!id) {
@@ -111,25 +112,30 @@ const ChatScreen = (props: Props) => {
 
 				if (selectedUserId) {
 					newChatData.users = [userData.userId, selectedUserId];
+					usersInChat = [userData.userId, selectedUserId];
 				}
 
 				if (selectedUserIds) {
 					newChatData.users = [userData.userId, ...selectedUserIds];
 					newChatData.chatName = chatName;
+					usersInChat = [userData.userId, ...selectedUserIds];
 				}
 
 				// create new chat
 				const newChatId = await createChat(userData.userId, newChatData);
 				id = newChatId;
 				setCurrentChatId(newChatId);
+			} else {
+				usersInChat = storedChats[id].users;
 			}
 
 			// chat already exists
 			await sendTextMessage({
 				chatId: id!,
-				senderId: userData.userId,
 				messageText,
 				replyTo: replyingTo?.messageId,
+				senderUserData: userData,
+				usersInChat: usersInChat,
 			});
 
 			setMessageText("");
@@ -171,6 +177,7 @@ const ChatScreen = (props: Props) => {
 
 		try {
 			let id = currentChatId;
+			let usersInChat: string[] = [];
 			// means it's a new chat
 			// If chat doesn't exist, create it (user is sending first message as an image)
 			if (!id) {
@@ -184,17 +191,21 @@ const ChatScreen = (props: Props) => {
 
 				if (selectedUserId) {
 					newChatData.users = [userData.userId, selectedUserId];
+					usersInChat = [userData.userId, selectedUserId];
 				}
 
 				if (selectedUserIds) {
 					newChatData.users = [userData.userId, ...selectedUserIds];
 					newChatData.chatName = chatName;
+					usersInChat = [userData.userId, ...selectedUserIds];
 				}
 
 				// create new chat
 				const newChatId = await createChat(userData.userId, newChatData);
 				id = newChatId;
 				setCurrentChatId(newChatId);
+			} else {
+				usersInChat = storedChats[id].users;
 			}
 
 			if (tempImageUri) {
@@ -203,9 +214,10 @@ const ChatScreen = (props: Props) => {
 
 				await sendImage({
 					chatId: id!,
-					senderId: userData.userId,
+					senderUserData: userData,
 					replyTo: replyingTo?.messageId,
 					imageUrl: uploadUrl,
+					usersInChat: usersInChat,
 				});
 
 				setReplyingTo(null);
@@ -243,8 +255,6 @@ const ChatScreen = (props: Props) => {
 			},
 		});
 	}, [currentChatId]);
-
-	console.log(tempImageUri);
 
 	return (
 		<SafeAreaView style={styles.container} edges={["bottom", "left", "right"]}>
