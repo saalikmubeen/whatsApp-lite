@@ -71,7 +71,7 @@ const ChatScreen = (props: Props) => {
 
 	const storedUsers = useAppSelector((state) => state.storedUsers.storedUsers);
 	const storedChats = useAppSelector((state) => state.chats.chatsData);
-	const chatData = (currentChatId && storedChats[currentChatId]) || props.route?.params;
+	const chatData = (currentChatId && storedChats[currentChatId]) || props.route?.params || {};
 
 	const getChatTitle = () => {
 		// chat already exists

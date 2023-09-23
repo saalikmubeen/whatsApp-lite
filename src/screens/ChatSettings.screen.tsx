@@ -22,7 +22,7 @@ const ChatSettingsScreen = (props: Props) => {
 	const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
 	const chatId = props.route.params.chatId;
-	const chatData = useAppSelector((state) => state.chats.chatsData[chatId]);
+	const chatData = useAppSelector((state) => state.chats.chatsData[chatId] || {});
 	const userData = useAppSelector((state) => state.auth.userData)!;
 	const storedUsers = useAppSelector((state) => state.storedUsers.storedUsers);
 
@@ -88,7 +88,9 @@ const ChatSettingsScreen = (props: Props) => {
 		}
 	}, [props.navigation, isLoading]);
 
-	const a = chatData.users;
+	if (!chatData.users) {
+		return null;
+	}
 
 	return (
 		<PageContainer>

@@ -120,6 +120,7 @@ const LoggedInNavigator = () => {
 					if (chatsFoundCount >= chatIds.length) {
 						dispatch(setChatsData({ chatsData }));
 						setIsLoading(false);
+						chatsFoundCount = 0;
 					}
 				});
 
