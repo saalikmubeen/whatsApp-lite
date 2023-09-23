@@ -15,10 +15,11 @@ type Props = {
 	isChecked?: boolean;
 	type: "user" | "group" | "link" | "button";
 	icon?: any;
+	hideImage?: boolean;
 };
 
 const UserItem = (props: Props) => {
-	const { title, subTitle, image, onPress, isChecked, type, icon } = props;
+	const { title, subTitle, image, onPress, isChecked, type, icon, hideImage } = props;
 
 	return (
 		<TouchableWithoutFeedback onPress={onPress}>
@@ -27,7 +28,7 @@ const UserItem = (props: Props) => {
 					<View style={styles.leftIconContainer}>
 						<AntDesign name={icon} size={20} color={colors.blue} />
 					</View>
-				) : (
+				) : hideImage ? null : (
 					<UserImage uri={image} size={40} />
 				)}
 
@@ -36,9 +37,11 @@ const UserItem = (props: Props) => {
 						{title}
 					</Text>
 
-					<Text numberOfLines={1} style={styles.subTitle}>
-						{subTitle}
-					</Text>
+					{subTitle && (
+						<Text numberOfLines={1} style={styles.subTitle}>
+							{subTitle}
+						</Text>
+					)}
 				</View>
 
 				{type === "group" && (

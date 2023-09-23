@@ -88,6 +88,8 @@ const ChatSettingsScreen = (props: Props) => {
 		}
 	}, [props.navigation, isLoading]);
 
+	const a = chatData.users;
+
 	return (
 		<PageContainer>
 			<PageTitle text="Chat Settings" />
@@ -114,7 +116,7 @@ const ChatSettingsScreen = (props: Props) => {
 						onPress={() => props.navigation.navigate("NewChat", { isGroupChat: true, chatId, existingUsers: chatData.users })}
 					/>
 
-					{chatData.users.map((uid) => {
+					{chatData.users.slice(0, 2).map((uid) => {
 						const currentUser = storedUsers[uid];
 						return (
 							<UserItem
@@ -123,21 +125,19 @@ const ChatSettingsScreen = (props: Props) => {
 								title={uid === userData.userId ? "You" : `${currentUser.firstName} ${currentUser.lastName}`}
 								subTitle={currentUser.about}
 								type={uid === userData.userId ? "user" : "link"}
-								onPress={() => uid !== userData.userId && props.navigation.navigate("Contact", { userId: uid })}
+								onPress={() => uid !== userData.userId && props.navigation.navigate("Contact", { userId: uid, chatId: chatId })}
 							/>
 						);
 					})}
 
-					{/* {chatData.users.length > 4 && (
-						<DataItem
+					{chatData.users.length > 2 && (
+						<UserItem
 							type={"link"}
 							title="View all"
 							hideImage={true}
-							onPress={() =>
-								props.navigation.navigate("DataList", { title: "Participants", data: chatData.users, type: "users", chatId })
-							}
+							onPress={() => props.navigation.navigate("Participants", { participants: chatData.users, chatId })}
 						/>
-					)} */}
+					)}
 				</View>
 
 				<View style={{ marginTop: 20 }}>
