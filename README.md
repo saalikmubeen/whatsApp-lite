@@ -62,7 +62,7 @@ Press `a` to run the app on android emulator or `i` to run on ios simulator.
 ![image](https://github.com/saalikmubeen/whatsApp-lite/blob/main/screenshots/01.screenshot.png?raw=true)
 ![image](./screenshots/02.screenshot.png)
 
-![image](./screenshots/03.screenshot.png)
+![image](/screenshots/03.screenshot.png)
 ![image](./screenshots/04.screenshot.png)
 ![image](./screenshots/05.screenshot.png)
 ![image](./screenshots/06.screenshot.png)
