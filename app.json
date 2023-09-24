@@ -15,13 +15,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.salikmubeen.whatsapplite"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.salikmubeen.whatsapplite"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -31,6 +33,9 @@
         "projectId": "1b169838-3ae6-464e-b816-04bcc8d939d1"
       }
     },
-    "owner": "salikmubeen"
+    "owner": "salikmubeen",
+    "plugins": [
+      "@config-plugins/react-native-webrtc"
+    ]
   }
 }
