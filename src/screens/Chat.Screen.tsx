@@ -29,7 +29,7 @@ import AwesomeAlert from "../components/alerts";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import CustomHeaderButton from "../components/CustomHeaderButton";
 
-// import BackgroundImage from "../../assets/images/droplet.jpeg";
+// import BackgroundImage from "../../assets/images/BG.png";
 
 type Props = StackScreenProps<LoggedInStackParamList, "Chat">;
 
@@ -259,7 +259,7 @@ const ChatScreen = (props: Props) => {
 	return (
 		<SafeAreaView style={styles.container} edges={["bottom", "left", "right"]}>
 			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={styles.screen} keyboardVerticalOffset={100}>
-				<ImageBackground source={require("../../assets/images/droplet.jpeg")} style={styles.backgroundImage}>
+				<ImageBackground source={require("../../assets/images/BG.png")} style={styles.backgroundImage}>
 					<PageContainer styles={{ backgroundColor: "transparent" }}>
 						{chatId ? (
 							<>

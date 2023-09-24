@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, KeyboardAvoidingView, Platform, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // import logo from "../assets/images/logo.png";
@@ -21,7 +21,7 @@ const AuthScreen = () => {
 						keyboardVerticalOffset={100}
 					>
 						<View style={styles.imageContainer}>
-							<Image style={styles.image} source={require("../../assets/images/logo.png")} resizeMode="contain" />
+							<Image style={styles.image} source={require("../../assets/images/logo1.png")} resizeMode="contain" />
 						</View>
 
 						{isSignUp ? <SignUpForm /> : <SignInForm />}
@@ -57,6 +57,8 @@ const styles = StyleSheet.create({
 	keyboardAvoidingView: {
 		flex: 1,
 		justifyContent: "center",
+		// backgroundColor: "red",
+		minHeight: Dimensions.get("window").height - 100,
 	},
 });
 

@@ -118,7 +118,7 @@ const ChatSettingsScreen = (props: Props) => {
 						onPress={() => props.navigation.navigate("NewChat", { isGroupChat: true, chatId, existingUsers: chatData.users })}
 					/>
 
-					{chatData.users.slice(0, 2).map((uid) => {
+					{chatData.users.slice(0, 5).map((uid) => {
 						const currentUser = storedUsers[uid];
 						return (
 							<UserItem
@@ -132,7 +132,7 @@ const ChatSettingsScreen = (props: Props) => {
 						);
 					})}
 
-					{chatData.users.length > 2 && (
+					{chatData.users.length > 5 && (
 						<UserItem
 							type={"link"}
 							title="View all"

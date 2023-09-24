@@ -65,7 +65,7 @@ export const StackNavigator = () => {
 					name="ChatSettings"
 					component={ChatSettingsScreen}
 					options={{
-						headerTitle: "ChatSettings",
+						headerTitle: "Chat Settings",
 						headerBackTitle: "Back",
 					}}
 				/>
@@ -81,7 +81,7 @@ export const StackNavigator = () => {
 					name="Contact"
 					component={ContactScreen}
 					options={{
-						headerTitle: "Contact info",
+						headerTitle: "Contact Info",
 						headerBackTitle: "Back",
 					}}
 				/>
