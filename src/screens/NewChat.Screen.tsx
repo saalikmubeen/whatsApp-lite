@@ -101,9 +101,6 @@ const NewChatScreen = (props: Props) => {
 			setAddingUsers(false);
 		}
 
-		// props.navigation.navigate("ChatSettings", {
-		// 	chatId,
-		// });
 		props.navigation.goBack();
 	};
 

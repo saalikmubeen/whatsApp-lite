@@ -40,7 +40,7 @@ export const openCamera = async () => {
 	}
 };
 
-export const uploadImageAsync = async (uri: string, isChatImage=false) => {
+export const uploadImageAsync = async (uri: string, isChatImage = false, isStatusImage = false) => {
 	const app = getFirebaseApp();
 
 	const blob: any = await new Promise((resolve, reject) => {
@@ -59,7 +59,7 @@ export const uploadImageAsync = async (uri: string, isChatImage=false) => {
 		xhr.send();
 	});
 
-	const pathFolder = isChatImage ? "chatImages" : "profilePics";
+	const pathFolder = isChatImage ? "chatImages" : isStatusImage ? "statusImages" : "profileImages";
 	const storageRef = ref(getStorage(app), `${pathFolder}/${uuid.v4()}`);
 
 	await uploadBytesResumable(storageRef, blob);

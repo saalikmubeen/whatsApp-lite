@@ -1,3 +1,5 @@
+import { Status } from "../utils/store/types";
+
 export type LoggedInStackParamList = {
 	Home: undefined;
 	ChatSettings: { chatId: string };
@@ -5,9 +7,12 @@ export type LoggedInStackParamList = {
 	NewChat: { isGroupChat: boolean; chatId?: string; existingUsers?: string[] };
 	Contact: { userId: string; chatId?: string };
 	Participants: { participants: string[]; chatId: string };
+	UserStatuses: { userId: string; username: string; statuses: Status[] };
+	Views: { statusId: string };
 };
 
 export type LoggedInTabParamList = {
 	ChatList: { selectedUserId?: string };
 	Settings: { userId: string };
+	Status: {};
 };

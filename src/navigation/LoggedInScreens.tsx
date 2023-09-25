@@ -1,7 +1,7 @@
 import React from "react";
 import { StackScreenProps, createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import ChatListScreen from "../screens/ChatList.screen";
 import SettingsScreen from "../screens/Settings.screen";
 import { LoggedInStackParamList, LoggedInTabParamList } from "./types";
@@ -10,6 +10,9 @@ import ChatScreen from "../screens/Chat.Screen";
 import NewChatScreen from "../screens/NewChat.Screen";
 import ContactScreen from "../screens/Contact.screen";
 import ParticipantsScreen from "../screens/Participants.screen";
+import StatusScreen from "../screens/Status.screen";
+import UserStatusesScreen from "../screens/UserStatuses.screen";
+import ViewsScreen from "../screens/Views.screen";
 
 const Stack = createStackNavigator<LoggedInStackParamList>();
 
@@ -33,6 +36,16 @@ const TabNavigator = (props: TabNavigatorProps) => {
 					tabBarLabel: "Chats",
 					tabBarIcon: ({ color, size }) => {
 						return <Ionicons name="chatbubbles" size={size} color={color} />;
+					},
+				}}
+			/>
+			<Tab.Screen
+				name="Status"
+				component={StatusScreen}
+				options={{
+					tabBarLabel: "Status",
+					tabBarIcon: ({ color, size }) => {
+						return <FontAwesome5 name="instalod" size={size} color={color} />;
 					},
 				}}
 			/>
@@ -97,6 +110,17 @@ export const StackNavigator = () => {
 
 			<Stack.Group screenOptions={{ presentation: "modal" }}>
 				<Stack.Screen name="NewChat" component={NewChatScreen} />
+
+				<Stack.Screen name="UserStatuses" component={UserStatusesScreen} />
+			</Stack.Group>
+
+			<Stack.Group
+				screenOptions={{
+					presentation: "transparentModal",
+					headerShown: false,
+				}}
+			>
+				<Stack.Screen name="Views" component={ViewsScreen} />
 			</Stack.Group>
 		</Stack.Navigator>
 	);

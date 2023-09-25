@@ -5,13 +5,18 @@ import { child, get, getDatabase, off, onValue, ref } from "firebase/database";
 import { StackNavigator } from "./LoggedInScreens";
 import { useAppDispatch, useAppSelector } from "../utils/store";
 import { getFirebaseApp } from "../utils/firebase";
-import { ChatData, UserData } from "../utils/store/types";
+import { ChatData, Status, UserData } from "../utils/store/types";
 import { setStoredUsers } from "../utils/store/usersSlice";
 import { setChatsData } from "../utils/store/chatsSlice";
 import { setChatMessages } from "../utils/store/chatMessagesSlice";
 import { ActivityIndicator, View } from "react-native";
 import { colors, commonStyles } from "../constants";
 import { registerForPushNotificationsAsync } from "../utils/notifications";
+import { setContactStatuses, setMyStatuses } from "../utils/store/statusSlice";
+import { StackScreenProps } from "@react-navigation/stack";
+import { LoggedInStackParamList } from "./types";
+
+type NavigationProps = StackScreenProps<LoggedInStackParamList, "Chat">["navigation"];
 
 const LoggedInNavigator = () => {
 	const [expoPushToken, setExpoPushToken] = useState("");
@@ -26,7 +31,7 @@ const LoggedInNavigator = () => {
 	const notificationListener = useRef<Notifications.Subscription>();
 	const responseListener = useRef<Notifications.Subscription>();
 
-	const navigation = useNavigation();
+	const navigation = useNavigation<NavigationProps>();
 
 	useEffect(() => {
 		registerForPushNotificationsAsync().then((token) => {
@@ -122,6 +127,31 @@ const LoggedInNavigator = () => {
 						setIsLoading(false);
 						chatsFoundCount = 0;
 					}
+
+					// get the statuses of each user in the chat (only get the statuses for direct chat users ignore group chat users)
+					if (!data.isGroupChat) {
+						const otherUserId = data.users.find((userId) => userId !== userData.userId);
+
+						if (otherUserId) {
+							const userStatusRef = child(dbRef, `userStatus/${otherUserId}`);
+							refs.push(userStatusRef);
+							onValue(userStatusRef, (userStatusSnapshot) => {
+								const userStatusData = userStatusSnapshot.val();
+								const userStatuses = [] as Status[];
+								for (const key in userStatusData) {
+									const status = userStatusData[key];
+									status.statusId = key;
+									userStatuses.push(status);
+								}
+								dispatch(
+									setContactStatuses({
+										statuses: userStatuses,
+										userId: otherUserId,
+									})
+								);
+							});
+						}
+					}
 				});
 
 				// get the messages for each chat
@@ -137,6 +167,21 @@ const LoggedInNavigator = () => {
 					setIsLoading(false);
 				}
 			}
+		});
+
+		// Get the statuses of currently logged in user (his own sttaues)
+		const userStatusRef = child(dbRef, `userStatus/${userData.userId}`);
+		refs.push(userStatusRef);
+		onValue(userStatusRef, (userStatusSnapshot) => {
+			const userStatusData = userStatusSnapshot.val();
+			const myStatues = [] as Status[];
+			for (const key in userStatusData) {
+				const status = userStatusData[key];
+				status.statusId = key;
+				myStatues.push(status);
+			}
+			dispatch(setMyStatuses({ statuses: myStatues }));
+			// console.log("userStatusData", userStatusData);
 		});
 
 		return () => {

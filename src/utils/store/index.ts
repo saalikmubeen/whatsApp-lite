@@ -4,6 +4,7 @@ import authSlice from "./authSlice";
 import usersSlice from "./usersSlice";
 import chatsSlice from "./chatsSlice";
 import chatMessagesSlice from "./chatMessagesSlice";
+import statusSlice from "./statusSlice";
 
 export const store = configureStore({
 	reducer: {
@@ -11,10 +12,10 @@ export const store = configureStore({
 		storedUsers: usersSlice,
 		chats: chatsSlice,
 		messages: chatMessagesSlice,
+		statuses: statusSlice,
 	},
 });
 
-// If using TypeScript:
 export type ApplicationState = ReturnType<typeof store.getState>;
 export type ApplicationDispatch = typeof store.dispatch;
 
