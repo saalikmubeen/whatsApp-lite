@@ -30,7 +30,7 @@ export function getTimeAgoOrTime(dateStr: string) {
 		const minutes = inputDate.getMinutes();
 		const amOrPm = hours >= 12 ? "PM" : "AM";
 		const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
-		return `Yesterday ${formattedHours}:${minutes.toString().padStart(2, "0")} ${amOrPm}`;
+		return `Yesterday at ${formattedHours}:${minutes.toString().padStart(2, "0")} ${amOrPm}`;
 	} else if (daysAgo <= 10) {
 		// Within 10 days
 		const hours = inputDate.getHours();
