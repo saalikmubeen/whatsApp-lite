@@ -1,11 +1,12 @@
 import React, { useRef } from "react";
 import { Image, StyleSheet, Text, TextStyle, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
-import { Feather, MaterialIcons } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 import * as Clipboard from "expo-clipboard";
 import { colors } from "../constants";
 import { Message } from "../utils/store/types";
 import { deleteMessage } from "../utils/actions/chatActions";
+import { formatAmPm } from "../utils/helperFns";
 
 type MenuItemProps = {
 	text: string;
@@ -27,26 +28,17 @@ const MenuItem = (props: MenuItemProps) => {
 	);
 };
 
-function formatAmPm(dateString: string) {
-	const date = new Date(dateString);
-	let hours = date.getHours();
-	let minutes = date.getMinutes();
-	let ampm = hours >= 12 ? "pm" : "am";
-	hours = hours % 12;
-	hours = hours ? hours : 12; // the hour '0' should be '12'
-	let mins: string | number = minutes < 10 ? "0" + minutes : minutes;
-	return hours + ":" + mins + " " + ampm;
-}
-
 type Props = {
 	text: string;
 	type: "myMessage" | "theirMessage" | "reply" | "info";
 	deleted?: boolean;
+	edited?: boolean;
 	messageId: string;
 	chatId: string;
 	userId: string;
 	date: string;
 	setReplyingTo: () => void;
+	setEditMessage?: () => void;
 	replyTo?: Message;
 	replyToUser?: string;
 	name?: string;
@@ -55,8 +47,23 @@ type Props = {
 };
 
 const ChatMessage = (props: Props) => {
-	const { text, type, messageId, date, setReplyingTo, replyTo, name, imageUrl, replyToUser, scrollToRepliedMessage, deleted, chatId, userId } =
-		props;
+	const {
+		text,
+		type,
+		messageId,
+		date,
+		setReplyingTo,
+		replyTo,
+		name,
+		imageUrl,
+		replyToUser,
+		scrollToRepliedMessage,
+		deleted,
+		chatId,
+		userId,
+		setEditMessage,
+		edited,
+	} = props;
 
 	const messageStyle: ViewStyle = { ...styles.container };
 	const textStyle: TextStyle = { ...styles.text };
@@ -147,7 +154,9 @@ const ChatMessage = (props: Props) => {
 
 					{props.type !== "reply" && (
 						<View style={styles.timeContainer}>
-							<Text style={styles.time}>{dateString}</Text>
+							<Text style={styles.time}>
+								{`${edited ? "Edited " : ""}`} {dateString}
+							</Text>
 						</View>
 					)}
 				</View>
@@ -160,7 +169,19 @@ const ChatMessage = (props: Props) => {
 						<MenuItem text="Copy to clipboard" icon="copy" onSelect={() => copyToClipboard(text)} />
 						<MenuItem text="Reply" icon="arrow-left-circle" onSelect={setReplyingTo} />
 						{type === "myMessage" && (
-							<MenuItem text="Delete for everyone" icon="delete" onSelect={deleteChatMessage} iconPack={MaterialIcons} />
+							<>
+								<MenuItem
+									text="Edit"
+									icon="pencil"
+									onSelect={() => {
+										if (setEditMessage) {
+											setEditMessage();
+										}
+									}}
+									iconPack={MaterialCommunityIcons}
+								/>
+								<MenuItem text="Delete for everyone" icon="delete" onSelect={deleteChatMessage} iconPack={MaterialIcons} />
+							</>
 						)}
 					</MenuOptions>
 				</Menu>
@@ -196,6 +217,7 @@ const styles = StyleSheet.create({
 	timeContainer: {
 		flexDirection: "row",
 		justifyContent: "flex-end",
+		marginTop: 5,
 	},
 	time: {
 		fontFamily: "regular",

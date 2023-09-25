@@ -3,12 +3,13 @@ import { StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 import { colors } from "../constants";
 
 type Props = {
-	type: "system" | "error";
+	type: "system" | "error" | "message";
 	text: string;
+	subText?: string;
 };
 
 const Bubble = (props: Props) => {
-	const { type, text } = props;
+	const { type, text, subText } = props;
 
 	const bubbleStyle: ViewStyle = { ...styles.container };
 	const textStyle: TextStyle = { ...styles.text };
@@ -26,6 +27,12 @@ const Bubble = (props: Props) => {
 			textStyle.color = "white";
 			bubbleStyle.marginTop = 10;
 			break;
+		case "message":
+			textStyle.color = colors.textColor;
+			bubbleStyle.backgroundColor = "#E7FED6";
+			bubbleStyle.alignItems = "center";
+			bubbleStyle.maxWidth = "90%";
+			bubbleStyle.padding = 8;
 		default:
 			break;
 	}
@@ -34,6 +41,7 @@ const Bubble = (props: Props) => {
 		<View style={wrapperStyle}>
 			<View style={bubbleStyle}>
 				<Text style={textStyle}>{text}</Text>
+				{subText && <Text style={styles.subText}>{subText}</Text>}
 			</View>
 		</View>
 	);
@@ -41,7 +49,7 @@ const Bubble = (props: Props) => {
 
 const styles = StyleSheet.create({
 	wrapperStyle: {
-		flexDirection: "row",
+		flexDirection: "column",
 		justifyContent: "center",
 	},
 	container: {
@@ -55,6 +63,16 @@ const styles = StyleSheet.create({
 	text: {
 		fontFamily: "regular",
 		letterSpacing: 0.3,
+	},
+	subText: {
+		fontFamily: "regular",
+		letterSpacing: 0.1,
+		color: colors.gray,
+		fontSize: 12,
+		justifyContent: "flex-end",
+		marginTop: 5,
+		width: "100%",
+		textAlign: "right",
 	},
 });
 

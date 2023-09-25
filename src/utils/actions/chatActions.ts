@@ -189,6 +189,7 @@ export const deleteMessage = async (data: { chatId: string; messageId: string; u
 	await update(messageRef, {
 		updatedAt: new Date().toISOString(),
 		type: "deleted",
+		text: "Message deleted",
 	});
 
 	const chatRef = child(dbRef, `chats/${chatId}`);
@@ -198,7 +199,7 @@ export const deleteMessage = async (data: { chatId: string; messageId: string; u
 	});
 };
 
-export const editMessage = async (data: { chatId: string; messageId: string; text: string; userId: string }) => {
+export const editChatMessage = async (data: { chatId: string; messageId: string; text: string; userId: string }) => {
 	const { chatId, messageId, text, userId } = data;
 	const app = getFirebaseApp();
 	const dbRef = ref(getDatabase());
