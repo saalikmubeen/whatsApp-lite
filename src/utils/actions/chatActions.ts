@@ -179,6 +179,45 @@ export const sendInfoMessage = async (data: Omit<SendMessageParams, "type" | "im
 	});
 };
 
+export const deleteMessage = async (data: { chatId: string; messageId: string; userId: string }) => {
+	const { chatId, messageId, userId } = data;
+	const app = getFirebaseApp();
+	const dbRef = ref(getDatabase());
+
+	const messageRef = child(dbRef, `messages/${chatId}/${messageId}`);
+
+	await update(messageRef, {
+		updatedAt: new Date().toISOString(),
+		type: "deleted",
+	});
+
+	const chatRef = child(dbRef, `chats/${chatId}`);
+	await update(chatRef, {
+		updatedBy: userId,
+		updatedAt: new Date().toISOString(),
+	});
+};
+
+export const editMessage = async (data: { chatId: string; messageId: string; text: string; userId: string }) => {
+	const { chatId, messageId, text, userId } = data;
+	const app = getFirebaseApp();
+	const dbRef = ref(getDatabase());
+
+	const messageRef = child(dbRef, `messages/${chatId}/${messageId}`);
+
+	await update(messageRef, {
+		updatedAt: new Date().toISOString(),
+		type: "edited",
+		text,
+	});
+
+	const chatRef = child(dbRef, `chats/${chatId}`);
+	await update(chatRef, {
+		updatedBy: userId,
+		updatedAt: new Date().toISOString(),
+	});
+};
+
 export const addUserChat = async (data: { userId: string; chatId: string }) => {
 	const { userId, chatId } = data;
 	try {

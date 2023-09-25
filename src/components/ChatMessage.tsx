@@ -1,10 +1,11 @@
 import React, { useRef } from "react";
 import { Image, StyleSheet, Text, TextStyle, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
-import { Feather, FontAwesome } from "@expo/vector-icons";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 import * as Clipboard from "expo-clipboard";
 import { colors } from "../constants";
 import { Message } from "../utils/store/types";
+import { deleteMessage } from "../utils/actions/chatActions";
 
 type MenuItemProps = {
 	text: string;
@@ -40,9 +41,10 @@ function formatAmPm(dateString: string) {
 type Props = {
 	text: string;
 	type: "myMessage" | "theirMessage" | "reply" | "info";
+	deleted?: boolean;
 	messageId: string;
-	// chatId: string;
-	// userId: string;
+	chatId: string;
+	userId: string;
 	date: string;
 	setReplyingTo: () => void;
 	replyTo?: Message;
@@ -53,7 +55,8 @@ type Props = {
 };
 
 const ChatMessage = (props: Props) => {
-	const { text, type, messageId, date, setReplyingTo, replyTo, name, imageUrl, replyToUser, scrollToRepliedMessage } = props;
+	const { text, type, messageId, date, setReplyingTo, replyTo, name, imageUrl, replyToUser, scrollToRepliedMessage, deleted, chatId, userId } =
+		props;
 
 	const messageStyle: ViewStyle = { ...styles.container };
 	const textStyle: TextStyle = { ...styles.text };
@@ -74,6 +77,14 @@ const ChatMessage = (props: Props) => {
 	const showMessageMenu = () => {
 		if (props.type === "reply") return;
 		menuRef.current?.props.ctx.menuActions.openMenu(messageId);
+	};
+
+	const deleteChatMessage = () => {
+		deleteMessage({
+			messageId,
+			chatId,
+			userId,
+		});
 	};
 
 	switch (type) {
@@ -118,10 +129,21 @@ const ChatMessage = (props: Props) => {
 							messageId={replyTo.messageId}
 							setReplyingTo={() => {}}
 							scrollToRepliedMessage={scrollToRepliedMessage}
+							chatId={chatId}
+							userId={userId}
 						/>
 					)}
 
-					{imageUrl ? <Image source={{ uri: imageUrl }} style={styles.image} /> : <Text style={textStyle}>{text}</Text>}
+					{deleted ? (
+						<View style={styles.deletedMessageContainer}>
+							<MaterialIcons name="not-interested" size={18} color="black" />
+							<Text style={{ ...textStyle, fontFamily: "italic" }}>This message has been deleted</Text>
+						</View>
+					) : imageUrl ? (
+						<Image source={{ uri: imageUrl }} style={styles.image} />
+					) : (
+						<Text style={textStyle}>{text}</Text>
+					)}
 
 					{props.type !== "reply" && (
 						<View style={styles.timeContainer}>
@@ -131,12 +153,15 @@ const ChatMessage = (props: Props) => {
 				</View>
 			</TouchableWithoutFeedback>
 
-			{props.type !== "reply" && (
+			{props.type !== "reply" && !deleted && (
 				<Menu ref={menuRef} name={messageId}>
 					<MenuTrigger />
 					<MenuOptions>
 						<MenuItem text="Copy to clipboard" icon="copy" onSelect={() => copyToClipboard(text)} />
 						<MenuItem text="Reply" icon="arrow-left-circle" onSelect={setReplyingTo} />
+						{type === "myMessage" && (
+							<MenuItem text="Delete for everyone" icon="delete" onSelect={deleteChatMessage} iconPack={MaterialIcons} />
+						)}
 					</MenuOptions>
 				</Menu>
 			)}
@@ -187,6 +212,11 @@ const styles = StyleSheet.create({
 		width: 300,
 		height: 300,
 		marginBottom: 5,
+	},
+	deletedMessageContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		gap: 6,
 	},
 });
 

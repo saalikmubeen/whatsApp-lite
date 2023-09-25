@@ -303,11 +303,12 @@ const ChatScreen = (props: Props) => {
 												type={messageType}
 												text={message.text}
 												messageId={message.messageId}
-												// userId={userData.userId}
-												// chatId={chatId}
+												userId={userData.userId}
+												chatId={chatId}
 												date={message.sentAt}
 												name={!chatData.isGroupChat || isOwnMessage ? undefined : senderName}
 												imageUrl={message.imageUrl}
+												deleted={message.type && message.type === "deleted" ? true : false}
 												setReplyingTo={() => setReplyingTo(message)}
 												replyTo={replyToMessage}
 												replyToUser={replyToUserName}
