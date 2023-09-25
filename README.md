@@ -1,6 +1,10 @@
-# WhatsApp Lite
+<h1 align="center">WhatsApp Lite</h1>
 
-WhatsApp like mobile chat application built with React Native, Expo, and Firebase.
+<p align="center">
+<h5>Description: </h5>
+
+`This is an open source WhatsApp like mobile chat application created using React Native library maintained by facebook, Expo, and Firebase.`
+The goal of this project is to build an application with exact features that the original whatsApp application has, however using different tools and approach. This project is not for profit and is used only as an object of study on development.
 
 # Libraries used
 
