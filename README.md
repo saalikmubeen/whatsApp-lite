@@ -17,14 +17,19 @@ WhatsApp like mobile chat application built with React Native, Expo, and Firebas
 -   Authentication with email and password
 -   Realtime chat with other users
 -   Group chat and private chats
--   Send images in chat
--   Reply to individual messages in chat by taggging the message
--   Push notifications for new messages
+-   `Send images` in chat
+-   `Reply to individual messages` in chat by taggging the message
+-   `Push notifications` for new messages
 -   User profile with profile picture
 -   Search for other users
 -   Leaving group chats
+-   Realtime `delete messages for everyone` feature like in WhatsApp
+-   `Edit messages` in chat in realtime like in WhatsApp
+-   `Upload Status with images like in WhatsApp`
+-   `Status views list feature like in WhatsApp`
+-   Delete status feature
 
-**and much more....**
+**and more....**
 
 # Installation
 
