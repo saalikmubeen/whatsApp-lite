@@ -19,9 +19,9 @@ import { LoggedInStackParamList } from "./types";
 type NavigationProps = StackScreenProps<LoggedInStackParamList, "Chat">["navigation"];
 
 const LoggedInNavigator = () => {
-	const [expoPushToken, setExpoPushToken] = useState("");
-	console.log("expoPushToken", expoPushToken);
-	console.log(expoPushToken);
+	// const [expoPushToken, setExpoPushToken] = useState("");
+	// console.log("expoPushToken", expoPushToken);
+	// console.log(expoPushToken);
 	const [isLoading, setIsLoading] = useState(true);
 	const userData = useAppSelector((state) => state.auth.userData)!;
 	const storedUsers = useAppSelector((state) => state.storedUsers.storedUsers);
@@ -35,9 +35,9 @@ const LoggedInNavigator = () => {
 
 	useEffect(() => {
 		registerForPushNotificationsAsync().then((token) => {
-			if (token) {
-				setExpoPushToken(token);
-			}
+			// if (token) {
+			// 	setExpoPushToken(token);
+			// }
 		});
 
 		// What to do when the app is in the background, the user receives a notification

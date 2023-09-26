@@ -1,12 +1,15 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { Image, StyleSheet, Text, TextStyle, TouchableWithoutFeedback, View, ViewStyle } from "react-native";
-import { Feather, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { Feather, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { Menu, MenuTrigger, MenuOptions, MenuOption } from "react-native-popup-menu";
 import * as Clipboard from "expo-clipboard";
 import { colors } from "../constants";
-import { Message } from "../utils/store/types";
-import { deleteMessage } from "../utils/actions/chatActions";
+import { Message, Seen } from "../utils/store/types";
+import { deleteMessage, markMessageAsSeen } from "../utils/actions/chatActions";
 import { formatAmPm } from "../utils/helperFns";
+import { useNavigation } from "@react-navigation/native";
+import { StackScreenProps } from "@react-navigation/stack";
+import { LoggedInStackParamList } from "../navigation/types";
 
 type MenuItemProps = {
 	text: string;
@@ -35,7 +38,8 @@ type Props = {
 	edited?: boolean;
 	messageId: string;
 	chatId: string;
-	userId: string;
+	userId: string; // loggedInUserId
+	sentBy: string;
 	date: string;
 	setReplyingTo: () => void;
 	setEditMessage?: () => void;
@@ -44,9 +48,14 @@ type Props = {
 	name?: string;
 	imageUrl?: string;
 	scrollToRepliedMessage: () => void;
+	totalSeens?: Array<Seen>;
+	isGroupChat: boolean;
 };
 
+type NavigationProps = StackScreenProps<LoggedInStackParamList, "MessageInfo">["navigation"];
+
 const ChatMessage = (props: Props) => {
+	const navigation = useNavigation<NavigationProps>();
 	const {
 		text,
 		type,
@@ -61,8 +70,11 @@ const ChatMessage = (props: Props) => {
 		deleted,
 		chatId,
 		userId,
+		sentBy,
 		setEditMessage,
 		edited,
+		totalSeens,
+		isGroupChat,
 	} = props;
 
 	const messageStyle: ViewStyle = { ...styles.container };
@@ -121,6 +133,32 @@ const ChatMessage = (props: Props) => {
 			break;
 	}
 
+	useEffect(() => {
+		// user is viewing his/her own message
+		if (type === "myMessage") {
+			console.log("is my message");
+			return;
+		}
+
+		// user is viewing other users message
+		// mark the other user's message as seen by the currently loggedIn user
+		const isAlreadySeen = totalSeens && totalSeens.find((seen) => seen.seenBy === userId);
+
+		if (isAlreadySeen) {
+			console.log("Already seen by the user");
+			return;
+		}
+
+		console.log("seen");
+		markMessageAsSeen({
+			chatId,
+			messageId,
+			seenBy: userId,
+		});
+	}, [chatId]);
+
+	const isSeen = !!(totalSeens && totalSeens.length > 0);
+
 	return (
 		<View style={wrapperStyle}>
 			<TouchableWithoutFeedback style={{ width: "100%" }} onLongPress={showMessageMenu} onPress={scrollToRepliedMessage}>
@@ -138,6 +176,8 @@ const ChatMessage = (props: Props) => {
 							scrollToRepliedMessage={scrollToRepliedMessage}
 							chatId={chatId}
 							userId={userId}
+							sentBy={replyTo.sentBy}
+							isGroupChat={isGroupChat}
 						/>
 					)}
 
@@ -157,6 +197,9 @@ const ChatMessage = (props: Props) => {
 							<Text style={styles.time}>
 								{`${edited ? "Edited " : ""}`} {dateString}
 							</Text>
+							{!deleted && type === "myMessage" && (
+								<Ionicons name="md-checkmark-done-sharp" size={13} color={isSeen ? colors.blue : colors.gray} />
+							)}
 						</View>
 					)}
 				</View>
@@ -171,15 +214,35 @@ const ChatMessage = (props: Props) => {
 						{type === "myMessage" && (
 							<>
 								<MenuItem
-									text="Edit"
-									icon="pencil"
+									text="Info"
+									icon="md-information-circle"
 									onSelect={() => {
-										if (setEditMessage) {
-											setEditMessage();
-										}
+										navigation.navigate("MessageInfo", {
+											totalSeens: totalSeens || [],
+											messageDetails: {
+												messageText: text,
+												messageDate: date,
+												isGroupChat,
+												imageUrl,
+												isSeen,
+												edited: !!edited,
+											},
+										});
 									}}
-									iconPack={MaterialCommunityIcons}
+									iconPack={Ionicons}
 								/>
+								{!imageUrl && (
+									<MenuItem
+										text="Edit"
+										icon="pencil"
+										onSelect={() => {
+											if (setEditMessage) {
+												setEditMessage();
+											}
+										}}
+										iconPack={MaterialCommunityIcons}
+									/>
+								)}
 								<MenuItem text="Delete for everyone" icon="delete" onSelect={deleteChatMessage} iconPack={MaterialIcons} />
 							</>
 						)}
@@ -217,6 +280,8 @@ const styles = StyleSheet.create({
 	timeContainer: {
 		flexDirection: "row",
 		justifyContent: "flex-end",
+		alignItems: "center",
+		gap: 1,
 		marginTop: 5,
 	},
 	time: {

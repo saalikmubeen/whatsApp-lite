@@ -358,6 +358,31 @@ export const removeUserFromChat = async (data: RemoveUserFromChatParams) => {
 	});
 };
 
+type MarkMessageAsSeenParams = {
+	chatId: string;
+	messageId: string;
+	seenBy: string;
+};
+
+export const markMessageAsSeen = async (data: MarkMessageAsSeenParams) => {
+	try {
+		const { chatId, messageId, seenBy } = data;
+		const app = getFirebaseApp();
+		const dbRef = ref(getDatabase());
+
+		const messageSeenRef = child(dbRef, `messages/${chatId}/${messageId}/seen`);
+
+		const seenData = {
+			seenBy,
+			seenAt: new Date().toISOString(),
+		};
+
+		await push(messageSeenRef, seenData);
+	} catch (err) {
+		console.log(err);
+	}
+};
+
 type SendPushNotificationToUsersParams = {
 	chatUsers: string[];
 	title: string;

@@ -86,16 +86,21 @@ const UserStatusesScreen = (props: Props) => {
 		const currentStatusViewers = Object.values(currentStatusViews || {});
 
 		// user has already viewed this status
-		if (currentStatusViewers.includes(loggedInUser.userId)) {
+		const hasAlreadyViewed = currentStatusViewers.find((viewer) => viewer.viewerId === loggedInUser.userId);
+		if (hasAlreadyViewed) {
+			console.log("user has already viewed this status");
 			return;
 		}
+
+		console.log("user has not viewed this status");
 
 		updateStatusViews({
 			statusId: statuses[currentStatusIndex].statusId,
 			userId: userId, // the userId whose status is being viewed
 			viewerId: loggedInUser.userId,
 		});
-	}, [currentStatusIndex]);
+
+	}, [currentStatusIndex, statuses, userId]);
 
 	return (
 		<Carousel

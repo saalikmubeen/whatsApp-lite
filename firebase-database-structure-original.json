@@ -43,7 +43,7 @@
 				"replyTo": "-NeElEdDlDC4gBpygFIh",
 				"sentAt": "2023-09-21T14:46:52.492Z",
 				"sentBy": "uGXHAC1NSpYLQMsJTUTp8ybcinn2",
-				"text": "Toyota Kirloskar Motor (TKM) posted a domestic tally of 20,970 units in the month of August 2023 as against 14,959 units during the same period last year with a YoY positive sales growth of 40 per cent in India. Compared to the previous month of July 2023 with 20,759 units, a MoM volume increase of 1 per cent was noted and edied",
+				"text": "Toyota Kirloskar Motor (TKM) posted a domestic tally of 20,970 units in the month of and edied",
 				"type": "edited",
 				"updatedAt": "2023-09-25T19:49:25.355Z"
 			},
@@ -59,6 +59,21 @@
 				"text": "Message deleted",
 				"type": "deleted",
 				"updatedAt": "2023-09-25T16:33:45.767Z"
+			},
+			"-Nf0r9x14rbqalO2sgoy": {
+				"seen": {
+					"-NfGPdC_L9g2odRgTAdp": {
+						"seenAt": "2023-09-26T12:15:37.098Z",
+						"seenBy": "uGXHAC1NSpYLQMsJTUTp8ybcinn2"
+					},
+					"-NfHm46UajDoIH5Wmr_k": {
+						"seenAt": "2023-09-26T18:37:38.198Z",
+						"seenBy": "E5GvJxomD9O1zL3X89jeCbJDdku2"
+					}
+				},
+				"sentAt": "2023-09-23T11:46:20.166Z",
+				"sentBy": "E5GvJxomD9O1zL3X89jeCbJDdku2",
+				"text": "It was great"
 			}
 		}
 	},
@@ -78,18 +93,32 @@
 				"createdAt": "2023-09-24T21:46:22.590Z",
 				"imageUrl": "https://www.saalik.me/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Fdqxiycnxu%2Fimage%2Fupload%2Fv1660904364%2Fsaalik.me%2FIMG_20220115_225505_we3d2k.jpg&w=1080&q=75",
 				"views": {
-					"-NfB4ooFKW0n73yiqJk8": "E5GvJxomD9O1zL3X89jeCbJDdku2",
-					"-NfB4pk-ftIznVrZdLyQ": "E5GvJxomD9O1zL3X89jeCbJDdku2",
-					"-NfB4qBvPrSWyXr-27cg": "E5GvJxomD9O1zL3X89jeCbJDdku2"
+					"-NfB4ooFKW0n73yiqJk8": {
+						"viewerId": "E5GvJxomD9O1zL3X89jeCbJDdku2",
+						"viewedAt": "2023-09-26T09:05:57.996Z"
+					},
+					"-NfB4pk-ftIznVrZdLyQ": {
+						"viewerId": "ckwBpufkyGTq6oNnohhoWOwe6sE3",
+						"viewedAt": "2023-09-25T09:07:12.419Z"
+					},
+					"-NfB4qBvPrSWyXr-27cg": {
+						"viewerId": "E5GvJxomD9O1zL3X89jeCbJDdku2",
+						"viewedAt": "2nt976zd2b4PwasT3p8zKJXecyr83"
+					}
 				}
 			},
 			"-Nf89Pqt4ivv4t-vL73U": {
 				"createdAt": "2023-09-24T21:47:46.571Z",
 				"imageUrl": "https://www.saalik.me/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Fdqxiycnxu%2Fimage%2Fupload%2Fv1660904282%2Fsaalik.me%2FIMG_20220819_002437_icugad.jpg&w=1080&q=75",
 				"views": {
-					"-NfB4pDeAQ8RkHWImrrO": "E5GvJxomD9O1zL3X89jeCbJDdku2",
-					"-NfB4pxVyLcB8qk2WLrM": "E5GvJxomD9O1zL3X89jeCbJDdku2",
-					"-NfB4qNrXjIon1-ZbbPs": "E5GvJxomD9O1zL3X89jeCbJDdku2"
+					"-NfDC78k-YxocKTxbKzP": {
+						"viewerId": "O7GWktcZPbWhtzuXQERfPNvZdEw1",
+						"viewedAt": "2023-09-26T09:05:57.996Z"
+					},
+					"-NfDCBcAR_Qk5f2a7red": {
+						"viewerId": "Pg4EpioqIHSkM0LzJIpV3Wh1reJ3",
+						"viewedAt": "2023-09-25T09:07:12.419Z"
+					}
 				}
 			}
 		}

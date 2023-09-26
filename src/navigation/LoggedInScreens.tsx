@@ -13,6 +13,7 @@ import ParticipantsScreen from "../screens/Participants.screen";
 import StatusScreen from "../screens/Status.screen";
 import UserStatusesScreen from "../screens/UserStatuses.screen";
 import ViewsScreen from "../screens/Views.screen";
+import MessageInfoScreen from "../screens/MessageInfo.Screen";
 
 const Stack = createStackNavigator<LoggedInStackParamList>();
 
@@ -112,6 +113,15 @@ export const StackNavigator = () => {
 				<Stack.Screen name="NewChat" component={NewChatScreen} />
 
 				<Stack.Screen name="UserStatuses" component={UserStatusesScreen} />
+
+				<Stack.Screen
+					name="MessageInfo"
+					component={MessageInfoScreen}
+					options={{
+						headerTitle: "Message Info",
+						headerBackTitle: "Back",
+					}}
+				/>
 			</Stack.Group>
 
 			<Stack.Group

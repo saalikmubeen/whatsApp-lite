@@ -1,4 +1,4 @@
-import { Status } from "../utils/store/types";
+import { Seen, Status } from "../utils/store/types";
 
 export type LoggedInStackParamList = {
 	Home: undefined;
@@ -9,6 +9,17 @@ export type LoggedInStackParamList = {
 	Participants: { participants: string[]; chatId: string };
 	UserStatuses: { userId: string; username: string; statuses: Status[] };
 	Views: { statusId: string };
+	MessageInfo: {
+		totalSeens: Seen[];
+		messageDetails: {
+			messageText: string;
+			messageDate: string;
+			isGroupChat: boolean;
+			imageUrl?: string;
+			isSeen: boolean;
+			edited: boolean;
+		};
+	};
 };
 
 export type LoggedInTabParamList = {

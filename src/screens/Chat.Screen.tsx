@@ -344,6 +344,9 @@ const ChatScreen = (props: Props) => {
 												? "You"
 												: `${replyingToUser.firstName} ${replyingToUser.lastName}`);
 
+										// totalSeens of the message sent by currently logged in user
+										let totalSeens = Object.values(message.seen || {});
+
 										return (
 											<ChatMessage
 												type={messageType}
@@ -351,6 +354,7 @@ const ChatScreen = (props: Props) => {
 												messageId={message.messageId}
 												userId={userData.userId}
 												chatId={chatId}
+												senderId={message.sentBy}
 												date={message.sentAt}
 												name={!chatData.isGroupChat || isOwnMessage ? undefined : senderName}
 												imageUrl={message.imageUrl}
@@ -367,6 +371,8 @@ const ChatScreen = (props: Props) => {
 														scrollToMessage(replyToMessage);
 													}
 												}}
+												totalSeens={totalSeens}
+												isGroupChat={!!chatData.isGroupChat}
 											/>
 										);
 									}}

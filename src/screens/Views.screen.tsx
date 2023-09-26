@@ -6,6 +6,7 @@ import PageContainer from "../components/PageContainer";
 import UserItem from "../components/UserItem";
 import { colors } from "../constants";
 import { Ionicons } from "@expo/vector-icons";
+import { getTimeAgoOrTime } from "../utils/helperFns";
 
 type Props = StackScreenProps<LoggedInStackParamList, "Views">;
 
@@ -20,8 +21,11 @@ function ViewsScreen({ navigation, route }: Props) {
 
 	const views = status?.views || {};
 	const statusViews = Object.values(views).map((view) => {
-		const user = storedUsers[view];
-		return user;
+		const user = storedUsers[view.viewerId];
+		return {
+			viewer: user,
+			viewedAt: view.viewedAt,
+		}
 	});
 
 	return (
@@ -62,10 +66,11 @@ function ViewsScreen({ navigation, route }: Props) {
 						<FlatList
 							data={statusViews}
 							renderItem={(itemData) => {
-								const viewUser = itemData.item;
-
+								const viewUser = itemData.item.viewer;
+								let viewedAt = itemData.item.viewedAt;
+								
 								let title = `${viewUser.firstName} ${viewUser.lastName}`;
-								const subTitle = viewUser.about;
+								const subTitle = `Viewed at ${getTimeAgoOrTime(viewedAt)}`;
 								let image = viewUser.profilePicture;
 
 								return (

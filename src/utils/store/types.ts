@@ -30,6 +30,11 @@ export type ChatData = {
 	key: string; // chatId
 };
 
+export type Seen = {
+	seenBy: string;
+	seenAt: string;
+};
+
 export type Message = {
 	messageId: string;
 	sentBy: string;
@@ -38,6 +43,9 @@ export type Message = {
 	imageUrl?: string;
 	replyTo?: string; // other message Id
 	type?: string;
+	seen?: {
+		[key: string]: Seen;
+	};
 	// updatedAt: string;
 };
 
@@ -50,6 +58,9 @@ export type Status = {
 	imageUrl: string;
 	createdAt: string;
 	views: {
-		[key: string]: string;
+		[key: string]: {
+			viewerId: string;
+			viewedAt: string;
+		};
 	};
 };

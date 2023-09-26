@@ -69,26 +69,27 @@ Press `a` to run the app on android emulator or `i` to run on ios simulator. Or 
 # Firebase Realtime Database Structure
 
 ```json
+
 {
 	"chats": {
 		"chatId1": {
 			"createdAt": "2023-09-24T09:45:02.472Z",
-			"createdBy": "uGXHAC1NSpYLQMsJTUTp8ybcinn2",
+			"createdBy": "userId1",
 			"isGroupChat": false,
 			"latestMessageText": "Hey",
 			"updatedAt": "2023-09-24T09:45:03.599Z",
-			"updatedBy": "uGXHAC1NSpYLQMsJTUTp8ybcinn2",
+			"updatedBy": "userId2",
 			"users": ["userId1", "userId2"]
 		},
 		"chatId2": {
 			"chatImage": "https://firebasestorage.googleapis.com/v0/b/whatsapp-lite-rn.appspot.com/o/profilePics%2F1ab3dd26-04d5-4eee-a9c5-72bb05d02e7e?alt=media&token=5265a9c8-5f4d-46c2-b077-01b5119e46d7",
 			"chatName": "Developers Group",
 			"createdAt": "2023-09-24T09:50:17.183Z",
-			"createdBy": "uGXHAC1NSpYLQMsJTUTp8ybcinn2",
+			"createdBy": "userId2",
 			"isGroupChat": true,
 			"latestMessageText": "tom carson added testt test to the chat",
 			"updatedAt": "2023-09-24T10:36:14.032Z",
-			"updatedBy": "E5GvJxomD9O1zL3X89jeCbJDdku2",
+			"updatedBy": "userId1",
 			"users": ["userId1", "userId2", "userId3", "userId4", "userId5", "userId6"]
 		}
 	},
@@ -97,29 +98,44 @@ Press `a` to run the app on android emulator or `i` to run on ios simulator. Or 
 			"messageId1": {
 				"replyTo": "-NeEljH9w49Qk2J0RALS",
 				"sentAt": "2023-09-21T14:46:35.165Z",
-				"sentBy": "uGXHAC1NSpYLQMsJTUTp8ybcinn2",
+				"sentBy": "userId4",
 				"text": "Testing "
 			},
 			"messageId2": {
 				"replyTo": "-NeElEdDlDC4gBpygFIh",
 				"sentAt": "2023-09-21T14:46:52.492Z",
-				"sentBy": "uGXHAC1NSpYLQMsJTUTp8ybcinn2",
-				"text": "Toyota Kirloskar Motor (TKM) posted a domestic tally of 20,970 units in the month of August 2023 as against 14,959 units during the same period last year with a YoY positive sales growth of 40 per cent in India. Compared to the previous month of July 2023 with 20,759 units, a MoM volume increase of 1 per cent was noted and edied",
+				"sentBy": "userId3",
+				"text": "Toyota Kirloskar Motor (TKM) posted a domestic tally of 20,970 units in the month of and edied",
 				"type": "edited",
 				"updatedAt": "2023-09-25T19:49:25.355Z"
 			},
 			"messageId3": {
 				"imageUrl": "https://firebasestorage.googleapis.com/v0/b/whatsapp-lite-rn.appspot.com/o/chatImages%2Fd508e388-011c-437b-b672-9800f5991a54?alt=media&token=25b7f99f-47b8-4e1a-babe-b2ce5bc664ad",
 				"sentAt": "2023-09-23T11:29:18.861Z",
-				"sentBy": "E5GvJxomD9O1zL3X89jeCbJDdku2",
+				"sentBy": "userId2",
 				"text": "Image"
 			},
 			"messageId4": {
 				"sentAt": "2023-09-23T15:00:41.858Z",
-				"sentBy": "E5GvJxomD9O1zL3X89jeCbJDdku2",
+				"sentBy": "userId1",
 				"text": "Message deleted",
 				"type": "deleted",
 				"updatedAt": "2023-09-25T16:33:45.767Z"
+			},
+			"messageId5": {
+				"seen": {
+					"-NfGPdC_L9g2odRgTAdp": {
+						"seenAt": "2023-09-26T12:15:37.098Z",
+						"seenBy": "userId1"
+					},
+					"-NfHm46UajDoIH5Wmr_k": {
+						"seenAt": "2023-09-26T18:37:38.198Z",
+						"seenBy": "userId2"
+					}
+				},
+				"sentAt": "2023-09-23T11:46:20.166Z",
+				"sentBy": "userId3",
+				"text": "It was great"
 			}
 		}
 	},
@@ -141,18 +157,36 @@ Press `a` to run the app on android emulator or `i` to run on ios simulator. Or 
 				"createdAt": "2023-09-24T21:46:22.590Z",
 				"imageUrl": "https://www.saalik.me/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Fdqxiycnxu%2Fimage%2Fupload%2Fv1660904364%2Fsaalik.me%2FIMG_20220115_225505_we3d2k.jpg&w=1080&q=75",
 				"views": {
-					"-NfB4ooFKW0n73yiqJk8": "userId2",
-					"-NfB4pk-ftIznVrZdLyQ": "userId3",
-					"-NfB4qBvPrSWyXr-27cg": "userId4"
+					"-NfB4ooFKW0n73yiqJk8": {
+						"viewerId": "userId2",
+						"viewedAt": "2023-09-24T21:46:24.590Z"
+					},
+					"-NfB4pk-ftIznVrZdLyQ": {
+						"viewerId": "userId3",
+						"viewedAt": "2023-09-24T21:46:25.590Z"
+					},
+					"-NfB4qBvPrSWyXr-27cg": {
+						"viewerId": "userId4",
+						"viewedAt": "2023-09-24T21:46:26.590Z"
+					}
 				}
 			},
 			"statusId2": {
 				"createdAt": "2023-09-24T21:47:46.571Z",
 				"imageUrl": "https://www.saalik.me/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Fdqxiycnxu%2Fimage%2Fupload%2Fv1660904282%2Fsaalik.me%2FIMG_20220819_002437_icugad.jpg&w=1080&q=75",
 				"views": {
-					"-NfB4pDeAQ8RkHWImrrO": "userId2",
-					"-NfB4pxVyLcB8qk2WLrM": "userId3",
-					"-NfB4qNrXjIon1-ZbbPs": "userId6"
+					"-NfB4pDeAQ8RkHWImrrO": {
+						"viewerId": "userId2",
+						"viewedAt": "2023-09-24T21:47:48.571Z"
+					},
+					"-NfB4pxVyLcB8qk2WLrM": {
+						"viewerId": "userId3",
+						"viewedAt": "2023-09-24T21:47:49.571Z"
+					},
+					"-NfB4qNrXjIon1-ZbbPs": {
+						"viewerId": "userId6",
+						"viewedAt": "2023-09-24T21:47:50.571Z"
+					}
 				}
 			}
 		}
@@ -173,6 +207,7 @@ Press `a` to run the app on android emulator or `i` to run on ios simulator. Or 
 		}
 	}
 }
+
 ```
 
 # Screenshots

@@ -50,3 +50,30 @@ export function getTimeAgoOrTime(dateStr: string) {
 		return `${day} ${month} ${year} ${formattedHours}:${minutes.toString().padStart(2, "0")} ${amOrPm}`;
 	}
 }
+
+const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+export function getDayAndDate(dateStr: string) {
+	const currentDate = new Date();
+	const inputDate = new Date(dateStr);
+	const timeDifference = currentDate.valueOf() - inputDate.valueOf();
+
+	const millisecondsInDay = 24 * 60 * 60 * 1000;
+	const daysAgo = Math.floor(timeDifference / millisecondsInDay);
+	console.log(daysAgo);
+
+	if (daysAgo === 0) {
+		// Within the same day, return "Today"
+		return "Today";
+	} else if (daysAgo === 1) {
+		// One day ago, return "Yesterday"
+		return "Yesterday";
+	} else if (daysAgo <= 7) {
+		// Within 7 days, return the name of the day of the week
+		const dayOfWeek = days[inputDate.getDay()];
+		return dayOfWeek;
+	} else {
+		// More than 7 days ago, return the date in the format "Wed, 6 Sep 2023"
+		const formattedDate = inputDate.toLocaleDateString("en-US", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+		return formattedDate;
+	}
+}

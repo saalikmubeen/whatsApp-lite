@@ -82,7 +82,12 @@ export const updateStatusViews = async (data: UpdateUserStatusViewsParams) => {
 		const dbRef = ref(getDatabase(app));
 		const userStatusesRef = child(dbRef, `userStatus/${userId}/${statusId}/views`);
 
-		await push(userStatusesRef, viewerId);
+		const viewData = {
+			viewerId,
+			viewedAt: new Date().toISOString(),
+		}
+
+		await push(userStatusesRef, viewData);
 	} catch (error) {
 		console.log(error);
 	}
