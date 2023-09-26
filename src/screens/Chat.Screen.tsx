@@ -31,6 +31,7 @@ import AwesomeAlert from "../components/alerts";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import CustomHeaderButton from "../components/CustomHeaderButton";
 import { formatAmPm } from "../utils/helperFns";
+import { BlurView } from "expo-blur";
 
 // import BackgroundImage from "../../assets/images/BG.png";
 
@@ -436,11 +437,11 @@ const ChatScreen = (props: Props) => {
 			</KeyboardAvoidingView>
 
 			{editMessage && (
-				<View style={blurOverlayStyle}>
+				<BlurView style={blurOverlayStyle} intensity={22}>
 					<View style={styles.editMessage}>
 						<Bubble text={editMessage.text} type="message" subText={formatAmPm(editMessage.sentAt)} />
 					</View>
-				</View>
+				</BlurView>
 			)}
 
 			<AwesomeAlert
@@ -515,8 +516,10 @@ const styles = StyleSheet.create({
 		left: 0,
 		right: 0,
 		top: 0,
-		backgroundColor: "rgba(0, 0, 0, 0.5)",
+		// backgroundColor: "rgba(0, 0, 0, 0.5)",
+		backgroundColor: "transparent",
 		zIndex: 100,
+		filter: "blur(10)",
 	},
 	editMessage: {
 		flex: 1,

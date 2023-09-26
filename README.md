@@ -1,4 +1,4 @@
-<h1 align="center">WhatsApp Lite</h1>
+# WhatsApp Lite
 
 <p align="center">
 <h5>Description: </h5>
@@ -20,18 +20,21 @@ The goal of this project is to build an application with exact features that the
 
 -   Authentication with email and password
 -   Realtime chat with other users
--   Group chat and private chats
+-   `Group chat` and `private chats`
 -   `Send images` in chat
--   `Reply to individual messages` in chat by taggging the message
 -   `Push notifications` for new messages
--   User profile with profile picture
+-   User profile with profile pictures
+-   Uploading group chat images
 -   Search for other users
--   Leaving group chats
+-   Leaving group chats and removing other users from group chats
 -   Realtime `delete messages for everyone` feature like in WhatsApp
+-   `Reply to individual messages` in chat by taggging the messages like in WhatsApp
 -   `Edit messages` in chat in realtime like in WhatsApp
 -   `Upload Status with images like in WhatsApp`
--   `Status views list feature like in WhatsApp`
+-   `Status views list feature along with time of view` like in WhatsApp
 -   Delete status feature
+-   `Blue ticks` for seen messages with `time of seen` like in WhatsApp with `realtime updates`
+-   `List of users who have seen the message with time of seen` like in WhatsApp for group chats
 
 **and more....**
 
@@ -212,9 +215,21 @@ Press `a` to run the app on android emulator or `i` to run on ios simulator. Or 
 
 # Screenshots
 
-|   |   |   |   |
-|---|---|---|---|
-|  ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695570098/WhatsApp-lite-rn/ea894jfirs2o3wiz2ygk.png) | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695570098/WhatsApp-lite-rn/jhnlsf5n0gtst53kk4cr.png)  | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695570097/WhatsApp-lite-rn/lxmwff5mv49vjap5vohe.png)  | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695570096/WhatsApp-lite-rn/bykp1fniu7tzmyrxpe7e.png)  |
-|  ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695570096/WhatsApp-lite-rn/wjxhjdp57nv3y2546kbb.png)  |  ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695570096/WhatsApp-lite-rn/ac4yukwiqxlr2pox5upz.png)  | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695570095/WhatsApp-lite-rn/umapoogms7bkwdrafmve.png)  | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695570094/WhatsApp-lite-rn/dl4oograxfoabkspmri3.png)  |
-|  ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695570093/WhatsApp-lite-rn/mka8bob4wbvulzqx1bwa.png) | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695570092/WhatsApp-lite-rn/bd82ya4ouibvo0aa200v.png)  | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695570091/WhatsApp-lite-rn/q9t5iwyw8hakr795o5yr.png)   | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695570091/WhatsApp-lite-rn/vxjyjmp8orufltvcmwyh.png)  |
-|  ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695570090/WhatsApp-lite-rn/te78be72vhrova5niowr.png) | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695570090/WhatsApp-lite-rn/cx9v5i8qw7ayyz1tpymn.png)  | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695570090/WhatsApp-lite-rn/ufubztkvrhasioiep9s0.png) | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695570089/WhatsApp-lite-rn/wy0zs292shjzumsjbeaj.png) |
+|     |     |     |     |
+|-----|-----|-----|-----|
+| ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764027/WhatsApp-lite-rn/r2j9myyd8v4qqm07dqvi.png)  | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764028/WhatsApp-lite-rn/sf3q17fl9jcvj3napei4.png)   | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764028/WhatsApp-lite-rn/s3aqsj6nd3iysdtqg8zo.png)   | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764030/WhatsApp-lite-rn/xcp5rxkjyjshdqaaygze.png)   |
+| ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764029/WhatsApp-lite-rn/hsskeycxrrqskbykyzwf.png)   | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764030/WhatsApp-lite-rn/p276yxdmtvmlshymljex.png)   | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764030/WhatsApp-lite-rn/zhwhlvnzi4r7jfww7t4d.png)  | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764034/WhatsApp-lite-rn/r8hjleq24hyl1bbni9rd.png)   |
+| ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764029/WhatsApp-lite-rn/mliyveeylt0dyjkeuyrc.png)   | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764036/WhatsApp-lite-rn/s1tayrhlbnnaj4eqsszj.png)  | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764033/WhatsApp-lite-rn/jzljofosdpqdpoyqs51m.png)  | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764033/WhatsApp-lite-rn/uhsrttr0kkvkxbbfuj0q.png) |
+| ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764034/WhatsApp-lite-rn/k0tnylmyspobdkl1b84o.png)  | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764030/WhatsApp-lite-rn/byyknpglqkvihvo0y0ts.png)  | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764030/WhatsApp-lite-rn/pok7qro7lo9amskj6aac.png) | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764028/WhatsApp-lite-rn/yplddumulm1hq1sidfcf.png)  |
+| ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764031/WhatsApp-lite-rn/zdc0y7fkdvvjlsrsmoiy.png)  | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764032/WhatsApp-lite-rn/xzk9mwam6fqvum0nr1hk.png)  | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764033/WhatsApp-lite-rn/lxjscya9qiwhl4xfybrf.png) | ![image](https://res.cloudinary.com/dqxiycnxu/image/upload/v1695764035/WhatsApp-lite-rn/aobnfxk07thfbonl0hj3.png)  |
+
+ 
+
+ 
+<!-- |     |     |     |     |
+|-----|-----|-----|-----|
+| 1   | 2   | 3   | 4   |
+| 5   | 6   | 7   | 8   |
+| 9   | 10  | 11  | 12  |
+| 13  | 14  | 15  | 16  |
+| 17  | 18  | 19  | 20  | -->
