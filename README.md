@@ -1,5 +1,7 @@
 # WhatsApp Lite
 
+***Not just another whatsApp Clone but more.***
+
 <p align="center">
 <h5>Description: </h5>
 
