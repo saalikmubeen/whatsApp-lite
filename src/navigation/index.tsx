@@ -6,10 +6,24 @@ import { useAppSelector } from "../utils/store";
 import StartUpScreen from "../screens/StartUp.Screen";
 
 const AppNavigator = () => {
-	const isAuth = useAppSelector((state) => state.auth.token !== null && state.auth.token !== "");
-	const didTryAutoLogin = useAppSelector((state) => state.auth.didTryAutoLogin);
+    const isAuth = useAppSelector(
+        (state) => state.auth.token !== null && state.auth.token !== ""
+    );
+    const didTryAutoLogin = useAppSelector(
+        (state) => state.auth.didTryAutoLogin
+    );
 
-	return <NavigationContainer>{isAuth ? <LoggedInNavigator /> : didTryAutoLogin ? <LoggedOutNavigator /> : <StartUpScreen />}</NavigationContainer>;
+    return (
+        <NavigationContainer>
+            {isAuth ? (
+                <LoggedInNavigator />
+            ) : didTryAutoLogin ? (
+                <LoggedOutNavigator />
+            ) : (
+                <StartUpScreen />
+            )}
+        </NavigationContainer>
+    );
 };
 
 export default AppNavigator;

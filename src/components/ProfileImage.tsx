@@ -1,106 +1,127 @@
 import React, { useState } from "react";
-import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+    ActivityIndicator,
+    Image,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
 import userImage from "../../assets/images/userImage.jpeg";
 
 import { updateSignedInUserData } from "../utils/actions/authActions";
 import { useAppDispatch } from "../utils/store";
-import { launchImagePicker, uploadImageAsync } from "../utils/imagePickerHelper";
+import {
+    launchImagePicker,
+    uploadImageAsync,
+} from "../utils/imagePickerHelper";
 import { updateLoggedInUserData } from "../utils/store/authSlice";
 import { colors } from "../constants";
 import { updateChatData } from "../utils/actions/chatActions";
 
 type Props = {
-	uri: string | undefined;
-	userId: string;
-	size: number;
-	chatId?: string;
+    uri: string | undefined;
+    userId: string;
+    size: number;
+    chatId?: string;
 };
 
 const ProfileImage = (props: Props) => {
-	const dispatch = useAppDispatch();
+    const dispatch = useAppDispatch();
 
-	const source = props.uri ? { uri: props.uri } : userImage;
+    const source = props.uri ? { uri: props.uri } : userImage;
 
-	const [image, setImage] = useState(source);
-	const [isLoading, setIsLoading] = useState(false);
+    const [image, setImage] = useState(source);
+    const [isLoading, setIsLoading] = useState(false);
 
-	const userId = props.userId;
-	const chatId = props.chatId;
+    const userId = props.userId;
+    const chatId = props.chatId;
 
-	const pickImage = async () => {
-		try {
-			const tempUri = await launchImagePicker();
+    const pickImage = async () => {
+        try {
+            const tempUri = await launchImagePicker();
 
-			if (!tempUri) return;
+            if (!tempUri) return;
 
-			// Upload the image
-			setIsLoading(true);
-			const uploadUrl = await uploadImageAsync(tempUri);
-			setIsLoading(false);
+            // Upload the image
+            setIsLoading(true);
+            const uploadUrl = await uploadImageAsync(tempUri);
+            setIsLoading(false);
 
-			if (!uploadUrl) {
-				throw new Error("Could not upload image");
-			}
+            if (!uploadUrl) {
+                throw new Error("Could not upload image");
+            }
 
-			// profile picture of group chat
-			if (chatId) {
-				await updateChatData({
-					chatId,
-					userId,
-					chatData: { chatImage: uploadUrl },
-				});
-			} else {
-				// profile picture of user
-				const newData = { profilePicture: uploadUrl };
+            // profile picture of group chat
+            if (chatId) {
+                await updateChatData({
+                    chatId,
+                    userId,
+                    chatData: { chatImage: uploadUrl },
+                });
+            } else {
+                // profile picture of user
+                const newData = { profilePicture: uploadUrl };
 
-				await updateSignedInUserData(userId, newData);
-				dispatch(updateLoggedInUserData({ newData }));
-			}
+                await updateSignedInUserData(userId, newData);
+                dispatch(updateLoggedInUserData({ newData }));
+            }
 
-			setImage({ uri: uploadUrl });
-		} catch (error) {
-			console.log(error);
-			setIsLoading(false);
-		}
-	};
+            setImage({ uri: uploadUrl });
+        } catch (error) {
+            console.log(error);
+            setIsLoading(false);
+        }
+    };
 
-	return (
-		<TouchableOpacity onPress={pickImage}>
-			{isLoading ? (
-				<View style={{ ...styles.loadingContainer, ...{ width: props.size, height: props.size } }}>
-					<ActivityIndicator size={"small"} color={colors.primary} />
-				</View>
-			) : (
-				<Image style={{ ...styles.image, ...{ width: props.size, height: props.size } }} source={image} />
-			)}
+    return (
+        <TouchableOpacity onPress={pickImage}>
+            {isLoading ? (
+                <View
+                    style={{
+                        ...styles.loadingContainer,
+                        ...{ width: props.size, height: props.size },
+                    }}
+                >
+                    <ActivityIndicator size={"small"} color={colors.primary} />
+                </View>
+            ) : (
+                <Image
+                    style={{
+                        ...styles.image,
+                        ...{ width: props.size, height: props.size },
+                    }}
+                    source={image}
+                />
+            )}
 
-			<View style={styles.editIconContainer}>
-				<FontAwesome name="pencil" size={15} color="black" />
-			</View>
-		</TouchableOpacity>
-	);
+            <View style={styles.editIconContainer}>
+                <FontAwesome name="pencil" size={15} color="black" />
+            </View>
+        </TouchableOpacity>
+    );
 };
 
 const styles = StyleSheet.create({
-	image: {
-		borderRadius: 50,
-		borderColor: colors.gray,
-		borderWidth: 1,
-	},
-	editIconContainer: {
-		position: "absolute",
-		bottom: 0,
-		right: 0,
-		backgroundColor: colors.lightGray,
-		borderRadius: 20,
-		padding: 8,
-	},
-	loadingContainer: {
-		justifyContent: "center",
-		alignItems: "center",
-	},
+    image: {
+        borderRadius: 50,
+        borderColor: colors.gray,
+        borderWidth: 1,
+    },
+    editIconContainer: {
+        position: "absolute",
+        bottom: 0,
+        right: 0,
+        backgroundColor: colors.lightGray,
+        borderRadius: 20,
+        padding: 8,
+    },
+    loadingContainer: {
+        justifyContent: "center",
+        alignItems: "center",
+    },
 });
 
 export default ProfileImage;

@@ -7,18 +7,19 @@ import chatMessagesSlice from "./chatMessagesSlice";
 import statusSlice from "./statusSlice";
 
 export const store = configureStore({
-	reducer: {
-		auth: authSlice,
-		storedUsers: usersSlice,
-		chats: chatsSlice,
-		messages: chatMessagesSlice,
-		statuses: statusSlice,
-	},
+    reducer: {
+        auth: authSlice,
+        storedUsers: usersSlice,
+        chats: chatsSlice,
+        messages: chatMessagesSlice,
+        statuses: statusSlice,
+    },
 });
 
 export type ApplicationState = ReturnType<typeof store.getState>;
 export type ApplicationDispatch = typeof store.dispatch;
 
-export const useAppSelector: TypedUseSelectorHook<ApplicationState> = useSelector;
+export const useAppSelector: TypedUseSelectorHook<ApplicationState> =
+    useSelector;
 export const useAppDispatch: () => ApplicationDispatch = useDispatch;
 // export const useAppDispatch = () => useDispatch<AppDispatch>();
